@@ -55,3 +55,40 @@ CodeCoverage/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
+
+# Ignore build output
+bin/
+obj/
+
+# Visual Studio folder
+.vs/
+
+# User-specific files
+*.user
+*.suo
+
+# Rider and VS Code
+.idea/
+.vscode/
+
+# Logs
+*.log
+
+# Publish and artifacts
+publish/
+artifacts/
+
+# Test results
+TestResults/
+
+# Database files
+*.mdf
+*.ldf
+
+# Local config
+appsettings.Development.json
+local.settings.json
+appsettings.json
+launchsettings.json
+
+*.http
