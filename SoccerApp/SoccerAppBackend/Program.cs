@@ -1,3 +1,5 @@
+using SoccerAppBackend.Data;
+
 namespace SoccerAppBackend
 {
     public class Program
@@ -9,6 +11,8 @@ namespace SoccerAppBackend
             // Add services to the container.
 
             builder.Services.AddControllers();
+
+            builder.Services.AddScoped<IDatabase, Database>();
 
             var app = builder.Build();
 
