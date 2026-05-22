@@ -25,5 +25,21 @@ namespace SoccerAppBackend.Controllers
 
             return Ok(coaches);
         }
+
+
+        [HttpGet("{coachId}")]
+        public async Task<IActionResult> GetCoachById(int coachId)
+        {
+            Coach coach = await coachesService.ReturnCoachById(coachId);
+
+            if (coach.CoachId > 0)
+            {
+                return Ok(coach);
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
     }
 }
