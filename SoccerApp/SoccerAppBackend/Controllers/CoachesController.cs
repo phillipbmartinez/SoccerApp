@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SoccerAppBackend.Data;
+using SoccerAppBackend.Models;
 
 namespace SoccerAppBackend.Controllers
 {
@@ -7,18 +8,22 @@ namespace SoccerAppBackend.Controllers
     [Route("api/[controller]")]
     public class CoachesController : Controller
     {
-        private readonly IDatabaseService database;
+        private readonly IDatabaseService databaseSerivce;
+        private readonly ICoachesService coachesService;
 
-        public CoachesController(IDatabaseService database)
+        public CoachesController(IDatabaseService databaseSerivce, ICoachesService coachesService)
         {
-            this.database = database;
+            this.databaseSerivce = databaseSerivce;
+            this.coachesService = coachesService;
         }
 
 
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> GetAllCoaches()
         {
-            return View();
+            List<Coach> coaches = await coachesService.ReturnAllCoaches();
+
+            return Ok(coaches);
         }
     }
 }
