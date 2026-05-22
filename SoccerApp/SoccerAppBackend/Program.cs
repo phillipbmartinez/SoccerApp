@@ -18,6 +18,7 @@ namespace SoccerAppBackend
 
             app.UseAuthorization();
 
+            app.MapGet("/", () => "SoccerAppBackend is running...");
 
             app.MapControllers();
 

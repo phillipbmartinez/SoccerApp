@@ -1,4 +1,4 @@
-namespace SoccerAppBackend
+namespace SoccerAppBackend.Models
 {
     public class WeatherForecast
     {

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using SoccerAppBackend.Models;
 
 namespace SoccerAppBackend.Controllers
 {
