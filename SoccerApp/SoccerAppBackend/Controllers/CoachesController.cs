@@ -7,9 +7,9 @@ namespace SoccerAppBackend.Controllers
     [Route("api/[controller]")]
     public class CoachesController : Controller
     {
-        private readonly IDatabase database;
+        private readonly IDatabaseService database;
 
-        public CoachesController(IDatabase database)
+        public CoachesController(IDatabaseService database)
         {
             this.database = database;
         }

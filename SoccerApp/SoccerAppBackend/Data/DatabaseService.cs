@@ -2,11 +2,11 @@
 
 namespace SoccerAppBackend.Data
 {
-    public class Database : IDatabase
+    public class DatabaseService : IDatabaseService
     {
         private readonly IConfiguration configuration;
 
-        public Database(IConfiguration configuration)
+        public DatabaseService(IConfiguration configuration)
         {
             this.configuration = configuration;
         }

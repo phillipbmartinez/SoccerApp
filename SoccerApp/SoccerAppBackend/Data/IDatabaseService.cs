@@ -2,7 +2,7 @@
 
 namespace SoccerAppBackend.Data
 {
-    public interface IDatabase
+    public interface IDatabaseService
     {
         SqlConnection CreateDbConnection();
         SqlConnection CreateLogFilesDbConnection();
