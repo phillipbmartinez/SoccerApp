@@ -15,11 +15,11 @@ namespace SoccerAppBackend.Data
             this.databaseSerivce = databaseSerivce;
         }
 
-        public async Task<List<Coach>> ReturnAllCoaches()
+        public async Task<List<Coach>> ReturnAllActiveCoaches()
         {
             List<Coach> coaches = new List<Coach>();
 
-            string sqlQuery = "SELECT * FROM SoccerAppCoaches";
+            string sqlQuery = "SELECT * FROM SoccerAppCoaches WHERE IsActive = 1";
 
             try
             {
@@ -69,7 +69,7 @@ namespace SoccerAppBackend.Data
         {
             Coach coach = new Coach();
 
-            string sqlQuery = "SELECT * FROM SoccerAppCoaches WHERE CoachId = @coachId";
+            string sqlQuery = "SELECT * FROM SoccerAppCoaches WHERE CoachId = @coachId AND IsActive = 1";
 
             try
             {
