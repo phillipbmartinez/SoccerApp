@@ -161,5 +161,90 @@ namespace SoccerAppBackend.Data
                 return coach;
             }
         }
+
+
+        public async Task<Coach> ReturnAnyCoachById(int coachId)
+        {
+            Coach coach = new Coach();
+
+            string sqlQuery = "SELECT * FROM SoccerAppCoaches WHERE CoachId = @coachId";
+
+            try
+            {
+                using SqlConnection connection = databaseSerivce.CreateDbConnection();
+                await connection.OpenAsync();
+                using SqlCommand command = new SqlCommand(sqlQuery, connection);
+                command.Parameters.AddWithValue("@coachId", coachId);
+                SqlDataReader reader = await command.ExecuteReaderAsync();
+
+                while (await reader.ReadAsync())
+                {
+                    coach.CoachId = reader.GetInt32(reader.GetOrdinal("CoachId"));
+                    coach.CoachingLicense = reader.IsDBNull(reader.GetOrdinal("CoachingLicense"))
+                    ? null
+                    : reader.GetString(reader.GetOrdinal("CoachingLicense"));
+                    coach.StartedCoachingDate = reader.GetDateTime(reader.GetOrdinal("StartedCoachingDate"));
+                    coach.IsActive = reader.GetBoolean(reader.GetOrdinal("IsActive"));
+                    coach.UserId = reader.IsDBNull(reader.GetOrdinal("UserId"))
+                    ? null
+                    : reader.GetInt32(reader.GetOrdinal("UserId"));
+                    coach.CreatedAt = reader.GetDateTime(reader.GetOrdinal("CreatedAt"));
+                    coach.ModifiedAt = reader.IsDBNull(reader.GetOrdinal("ModifiedAt"))
+                    ? null
+                    : reader.GetDateTime(reader.GetOrdinal("ModifiedAt"));
+                }
+
+                return coach;
+            }
+            catch (SqlException sqlEx)
+            {
+                Console.WriteLine($"[SQL EXCEPTION thrown from SoccerAppBackend => CoachesService => ReturnCoachById: {DateTime.Now}] - SQL Exception: {sqlEx.Message}");
+                Console.WriteLine(sqlEx.StackTrace);
+                return coach;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[EXCEPTION thrown from SoccerAppBackend => CoachesService => ReturnCoachById: {DateTime.Now}] - Exception: {ex.Message}");
+                Console.WriteLine(ex.StackTrace);
+                return coach;
+            }
+        }
+
+
+        public async Task<Coach> DeleteCoachById(int coachId)
+        {
+            Coach coachToDelete = new Coach();
+
+            string sqlQuery = "UPDATE SoccerAppCoaches SET IsActive = 0 WHERE CoachId = @coachId";
+
+            try
+            {
+                using SqlConnection connection = databaseSerivce.CreateDbConnection();
+                await connection.OpenAsync();
+                using SqlCommand command = new SqlCommand(sqlQuery, connection);
+                command.Parameters.AddWithValue("@coachId", coachId);
+
+                int rowsAffected = await command.ExecuteNonQueryAsync();
+
+                if (rowsAffected > 0)
+                {
+                    coachToDelete = await ReturnAnyCoachById(coachId);
+                }
+
+                return coachToDelete;
+            }
+            catch (SqlException sqlEx)
+            {
+                Console.WriteLine($"[SQL EXCEPTION thrown from SoccerAppBackend => CoachesService => DeleteCoachById: {DateTime.Now}] - SQL Exception: {sqlEx.Message}");
+                Console.WriteLine(sqlEx.StackTrace);
+                return coachToDelete;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[EXCEPTION thrown from SoccerAppBackend => CoachesService => DeleteCoachById: {DateTime.Now}] - Exception: {ex.Message}");
+                Console.WriteLine(ex.StackTrace);
+                return coachToDelete;
+            }
+        }
     }
 }
