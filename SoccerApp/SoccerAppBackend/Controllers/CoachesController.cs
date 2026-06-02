@@ -66,5 +66,13 @@ namespace SoccerAppBackend.Controllers
 
             return Ok(updatedCoach);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateCoach(Coach coachtoCreate)
+        {
+            Coach newCoach = await coachesService.CreateCoach(coachtoCreate);
+
+            return Ok(newCoach);
+        }
     }
 }
