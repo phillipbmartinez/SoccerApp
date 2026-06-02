@@ -251,13 +251,16 @@ namespace SoccerAppBackend.Data
 
         public async Task<Coach> UpdateCoach(Coach coachToUpdate)
         {
-            string sqlQuery = 
+            string sqlQuery =
                 @"  UPDATE SoccerAppCoaches
                     SET CoachingLicense = @coachingLicense, StartedCoachingDate = @startedCoachingDate, ModifiedAt = @modifiedAt
-                    WHERE CoachId = @coachId";
+                    WHERE CoachId = @coachId
+                    SELECT CAST(SCOPE_IDENTITY() AS INT)";
 
             try
             {
+                Coach existingCoachRecord = await GetCoachById(coachToUpdate.CoachId);
+
                 using SqlConnection connection = databaseSerivce.CreateDbConnection();
                 await connection.OpenAsync();
                 using SqlCommand command = new SqlCommand(sqlQuery, connection);
@@ -271,7 +274,7 @@ namespace SoccerAppBackend.Data
 
                 if (rowsAffected > 0)
                 {
-                    coachToUpdate = await GetCoachByIdIncludingInactive(coachToUpdate.CoachId);
+                    coachToUpdate = await GetCoachById(coachToUpdate.CoachId);
                 }
 
                 return coachToUpdate;
@@ -287,6 +290,71 @@ namespace SoccerAppBackend.Data
                 Console.WriteLine($"[EXCEPTION thrown from SoccerAppBackend => CoachesService => UpdateCoachById: {DateTime.Now}] - Exception: {ex.Message}");
                 Console.WriteLine(ex.StackTrace);
                 return coachToUpdate;
+            }
+        }
+
+
+        public async Task<Coach> CreateCoach(Coach coachToCreate)
+        {
+            Coach newCoach = new Coach();
+
+            string sqlQuery = @"
+                INSERT INTO SoccerAppCoaches (CoachingLicense, StartedCoachingDate, UserId)
+                VALUES (@coachinglicense, @startedCoachingDate, @userId)
+                SELECT CAST(SCOPE_IDENTITY() AS INT);";
+
+            try
+            {
+                using SqlConnection connection = databaseSerivce.CreateDbConnection();
+                await connection.OpenAsync();
+                using SqlCommand command = new SqlCommand(sqlQuery, connection);
+
+                command.Parameters.AddWithValue("@startedCoachingDate", coachToCreate.StartedCoachingDate);
+
+                if (!string.IsNullOrWhiteSpace(coachToCreate.CoachingLicense))
+                {
+                    command.Parameters.AddWithValue("@coachinglicense", coachToCreate.CoachingLicense);
+                }
+                else
+                {
+                    command.Parameters.AddWithValue("@coachinglicense", DBNull.Value);
+                }
+
+                if (!string.IsNullOrWhiteSpace(coachToCreate.UserId.ToString()))
+                {
+                    command.Parameters.AddWithValue("@userId", coachToCreate.UserId);
+                }
+                else
+                {
+                    command.Parameters.AddWithValue("@userId", DBNull.Value);
+                }
+
+                var result = await command.ExecuteScalarAsync();
+
+                if (result != null && int.TryParse(result.ToString(), out int newCoachId))
+                {
+                    newCoach = await GetCoachById(newCoachId);
+
+                    Console.WriteLine($"[SUCCESS : {DateTime.Now}] - New Coach inserted. ID: {newCoachId} from SoccerAppBackend => CoachesService => CreateCoach");
+                }
+                else
+                {
+                    Console.WriteLine($"[ERROR : {DateTime.Now}] - Error creating new Coach record in database from SoccerAppBackend => CoachesService => CreateCoach");
+                }
+
+                return newCoach;
+            }
+            catch (SqlException sqlEx)
+            {
+                Console.WriteLine($"[SQL EXCEPTION thrown from SoccerAppBackend => CoachesService => CreateCoach: {DateTime.Now}] - SQL Exception: {sqlEx.Message}");
+                Console.WriteLine(sqlEx.StackTrace);
+                return newCoach;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[EXCEPTION thrown from SoccerAppBackend => CoachesService => CreateCoach: {DateTime.Now}] - Exception: {ex.Message}");
+                Console.WriteLine(ex.StackTrace);
+                return newCoach;
             }
         }
     }

@@ -10,5 +10,6 @@ namespace SoccerAppBackend.Data
         Task<Coach> GetCoachByIdIncludingInactive(int coachId);
         Task<Coach> GetCoachById(int coachId);
         Task<Coach> UpdateCoach(Coach coachToUpdate);
+        Task<Coach> CreateCoach(Coach coachToCreate);
     }
 }
