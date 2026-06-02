@@ -58,5 +58,13 @@ namespace SoccerAppBackend.Controllers
 
             return Ok(coacheToDelete);
         }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateCoach(Coach coachToUpdate)
+        {
+            Coach updatedCoach = await coachesService.UpdateCoach(coachToUpdate);
+
+            return Ok(updatedCoach);
+        }
     }
 }
