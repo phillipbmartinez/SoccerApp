@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
 using Microsoft.Data.SqlClient;
+using Microsoft.Win32.SafeHandles;
 using SoccerAppBackend.Models;
 using static System.Reflection.Metadata.BlobBuilder;
 
@@ -244,6 +245,48 @@ namespace SoccerAppBackend.Data
                 Console.WriteLine($"[EXCEPTION thrown from SoccerAppBackend => CoachesService => DeleteCoachById: {DateTime.Now}] - Exception: {ex.Message}");
                 Console.WriteLine(ex.StackTrace);
                 return coachToDelete;
+            }
+        }
+
+
+        public async Task<Coach> UpdateCoach(Coach coachToUpdate)
+        {
+            string sqlQuery = 
+                @"  UPDATE SoccerAppCoaches
+                    SET CoachingLicense = @coachingLicense, StartedCoachingDate = @startedCoachingDate, ModifiedAt = @modifiedAt
+                    WHERE CoachId = @coachId";
+
+            try
+            {
+                using SqlConnection connection = databaseSerivce.CreateDbConnection();
+                await connection.OpenAsync();
+                using SqlCommand command = new SqlCommand(sqlQuery, connection);
+
+                command.Parameters.AddWithValue("@coachingLicense", coachToUpdate.CoachingLicense);
+                command.Parameters.AddWithValue("@startedCoachingDate", coachToUpdate.StartedCoachingDate);
+                command.Parameters.AddWithValue("@modifiedAt", DateTime.Now);
+                command.Parameters.AddWithValue("@coachId", coachToUpdate.CoachId);
+
+                int rowsAffected = await command.ExecuteNonQueryAsync();
+
+                if (rowsAffected > 0)
+                {
+                    coachToUpdate = await ReturnAnyCoachById(coachToUpdate.CoachId);
+                }
+
+                return coachToUpdate;
+            }
+            catch (SqlException sqlEx)
+            {
+                Console.WriteLine($"[SQL EXCEPTION thrown from SoccerAppBackend => CoachesService => UpdateCoachById: {DateTime.Now}] - SQL Exception: {sqlEx.Message}");
+                Console.WriteLine(sqlEx.StackTrace);
+                return coachToUpdate;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[EXCEPTION thrown from SoccerAppBackend => CoachesService => UpdateCoachById: {DateTime.Now}] - Exception: {ex.Message}");
+                Console.WriteLine(ex.StackTrace);
+                return coachToUpdate;
             }
         }
     }

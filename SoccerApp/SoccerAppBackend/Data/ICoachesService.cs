@@ -9,5 +9,6 @@ namespace SoccerAppBackend.Data
         Task<List<Coach>> ReturnAllInactiveCoaches();
         Task<Coach> ReturnAnyCoachById(int coachId);
         Task<Coach> ReturnCoachById(int coachId);
+        Task<Coach> UpdateCoach(Coach coachToUpdate);
     }
 }
