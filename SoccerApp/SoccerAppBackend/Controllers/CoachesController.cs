@@ -19,9 +19,18 @@ namespace SoccerAppBackend.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> GetAllCoaches()
+        public async Task<IActionResult> GetAllActiveCoaches()
         {
-            List<Coach> coaches = await coachesService.ReturnAllCoaches();
+            List<Coach> coaches = await coachesService.ReturnAllActiveCoaches();
+
+            return Ok(coaches);
+        }
+
+
+        [HttpGet("inactive")]
+        public async Task<IActionResult> GetAllInactiveCoaches()
+        {
+            List<Coach> coaches = await coachesService.ReturnAllInactiveCoaches();
 
             return Ok(coaches);
         }
@@ -40,6 +49,14 @@ namespace SoccerAppBackend.Controllers
             {
                 return NotFound();
             }
+        }
+
+        [HttpDelete("{coachId}")]
+        public async Task<IActionResult> DeleteCoachById(int coachId)
+        {
+            Coach coacheToDelete = await coachesService.DeleteCoachById(coachId);
+
+            return Ok(coacheToDelete);
         }
     }
 }
