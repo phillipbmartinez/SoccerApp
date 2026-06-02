@@ -16,7 +16,7 @@ namespace SoccerAppBackend.Data
             this.databaseSerivce = databaseSerivce;
         }
 
-        public async Task<List<Coach>> ReturnAllActiveCoaches()
+        public async Task<List<Coach>> GetActiveCoaches()
         {
             List<Coach> coaches = new List<Coach>();
 
@@ -65,7 +65,7 @@ namespace SoccerAppBackend.Data
             }
         }
 
-        public async Task<List<Coach>> ReturnAllInactiveCoaches()
+        public async Task<List<Coach>> GetInactiveCoaches()
         {
             List<Coach> coaches = new List<Coach>();
 
@@ -116,7 +116,7 @@ namespace SoccerAppBackend.Data
         }
 
 
-        public async Task<Coach> ReturnCoachById(int coachId)
+        public async Task<Coach> GetCoachById(int coachId)
         {
             Coach coach = new Coach();
 
@@ -164,7 +164,7 @@ namespace SoccerAppBackend.Data
         }
 
 
-        public async Task<Coach> ReturnAnyCoachById(int coachId)
+        public async Task<Coach> GetCoachByIdIncludingInactive(int coachId)
         {
             Coach coach = new Coach();
 
@@ -212,7 +212,7 @@ namespace SoccerAppBackend.Data
         }
 
 
-        public async Task<Coach> DeleteCoachById(int coachId)
+        public async Task<Coach> DeactivateCoachById(int coachId)
         {
             Coach coachToDelete = new Coach();
 
@@ -229,7 +229,7 @@ namespace SoccerAppBackend.Data
 
                 if (rowsAffected > 0)
                 {
-                    coachToDelete = await ReturnAnyCoachById(coachId);
+                    coachToDelete = await GetCoachByIdIncludingInactive(coachId);
                 }
 
                 return coachToDelete;
@@ -271,7 +271,7 @@ namespace SoccerAppBackend.Data
 
                 if (rowsAffected > 0)
                 {
-                    coachToUpdate = await ReturnAnyCoachById(coachToUpdate.CoachId);
+                    coachToUpdate = await GetCoachByIdIncludingInactive(coachToUpdate.CoachId);
                 }
 
                 return coachToUpdate;

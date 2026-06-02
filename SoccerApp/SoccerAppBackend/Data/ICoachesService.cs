@@ -4,11 +4,11 @@ namespace SoccerAppBackend.Data
 {
     public interface ICoachesService
     {
-        Task<Coach> DeleteCoachById(int coachId);
-        Task<List<Coach>> ReturnAllActiveCoaches();
-        Task<List<Coach>> ReturnAllInactiveCoaches();
-        Task<Coach> ReturnAnyCoachById(int coachId);
-        Task<Coach> ReturnCoachById(int coachId);
+        Task<Coach> DeactivateCoachById(int coachId);
+        Task<List<Coach>> GetActiveCoaches();
+        Task<List<Coach>> GetInactiveCoaches();
+        Task<Coach> GetCoachByIdIncludingInactive(int coachId);
+        Task<Coach> GetCoachById(int coachId);
         Task<Coach> UpdateCoach(Coach coachToUpdate);
     }
 }
