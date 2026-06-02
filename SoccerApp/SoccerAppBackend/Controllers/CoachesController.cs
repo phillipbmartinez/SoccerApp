@@ -21,7 +21,7 @@ namespace SoccerAppBackend.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllActiveCoaches()
         {
-            List<Coach> coaches = await coachesService.ReturnAllActiveCoaches();
+            List<Coach> coaches = await coachesService.GetActiveCoaches();
 
             return Ok(coaches);
         }
@@ -30,7 +30,7 @@ namespace SoccerAppBackend.Controllers
         [HttpGet("inactive")]
         public async Task<IActionResult> GetAllInactiveCoaches()
         {
-            List<Coach> coaches = await coachesService.ReturnAllInactiveCoaches();
+            List<Coach> coaches = await coachesService.GetInactiveCoaches();
 
             return Ok(coaches);
         }
@@ -39,7 +39,7 @@ namespace SoccerAppBackend.Controllers
         [HttpGet("{coachId}")]
         public async Task<IActionResult> GetCoachById(int coachId)
         {
-            Coach coach = await coachesService.ReturnCoachById(coachId);
+            Coach coach = await coachesService.GetCoachById(coachId);
 
             if (coach.CoachId > 0)
             {
@@ -54,7 +54,7 @@ namespace SoccerAppBackend.Controllers
         [HttpDelete("{coachId}")]
         public async Task<IActionResult> DeleteCoachById(int coachId)
         {
-            Coach coacheToDelete = await coachesService.DeleteCoachById(coachId);
+            Coach coacheToDelete = await coachesService.DeactivateCoachById(coachId);
 
             return Ok(coacheToDelete);
         }
