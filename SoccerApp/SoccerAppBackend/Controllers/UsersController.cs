@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SoccerAppBackend.Data;
+using SoccerAppBackend.Models;
 
 namespace SoccerAppBackend.Controllers
 {
@@ -16,9 +17,12 @@ namespace SoccerAppBackend.Controllers
             this.usersService = usersService;
         }
 
-        public IActionResult Index()
+        [HttpGet]
+        public async Task<IActionResult> GetActiveUsers()
         {
-            return View();
+            List<User> users = await usersService.GetActiveUsers();
+
+            return Ok(users);
         }
     }
 }
