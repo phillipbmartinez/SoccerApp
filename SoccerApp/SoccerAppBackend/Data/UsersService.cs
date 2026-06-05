@@ -191,5 +191,51 @@ namespace SoccerAppBackend.Data
                 return userToDeactivate;
             }
         }
+
+
+        public async Task<User> UpdateUser(User userToUpdate)
+        {
+            string sqlQuery =
+                @"  UPDATE SoccerAppUsers
+                    SET FirstName = @firstName, Lastname = @lastName, Email = @email, DateOfBirth = @dateOfBirth, RoleId = @roleId, ModifiedAt = @modifiedAt
+                    WHERE userId = @userId
+                    SELECT CAST(SCOPE_IDENTITY() AS INT)";
+
+            try
+            {
+                using SqlConnection connection = databaseSerivce.CreateDbConnection();
+                await connection.OpenAsync();
+                using SqlCommand command = new SqlCommand(sqlQuery, connection);
+
+                command.Parameters.AddWithValue("@userId", userToUpdate.UserId);
+                command.Parameters.AddWithValue("@firstName", userToUpdate.FirstName);
+                command.Parameters.AddWithValue("@lastName", userToUpdate.LastName);
+                command.Parameters.AddWithValue("@email", userToUpdate.Email);
+                command.Parameters.AddWithValue("@dateOfBirth", userToUpdate.DateOfBirth);
+                command.Parameters.AddWithValue("@roleId", userToUpdate.RoleId);
+                command.Parameters.AddWithValue("@modifiedAt", DateTime.Now);
+
+                int rowsAffected = await command.ExecuteNonQueryAsync();
+
+                if (rowsAffected > 0)
+                {
+                    userToUpdate = await GetUserById(userToUpdate.UserId);
+                }
+
+                return userToUpdate;
+            }
+            catch (SqlException sqlEx)
+            {
+                Console.WriteLine($"[SQL EXCEPTION thrown from SoccerAppBackend => UsersService => UpdateUser: {DateTime.Now}] - SQL Exception: {sqlEx.Message}");
+                Console.WriteLine(sqlEx.StackTrace);
+                return userToUpdate;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[EXCEPTION thrown from SoccerAppBackend => UsersService => UpdateUser: {DateTime.Now}] - Exception: {ex.Message}");
+                Console.WriteLine(ex.StackTrace);
+                return userToUpdate;
+            }
+        }
     }
 }

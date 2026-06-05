@@ -8,5 +8,6 @@ namespace SoccerAppBackend.Data
         Task<List<User>> GetActiveUsers();
         Task<List<User>> GetInactiveUsers();
         Task<User> GetUserById(int userId);
+        Task<User> UpdateUser(User userToUpdate);
     }
 }
