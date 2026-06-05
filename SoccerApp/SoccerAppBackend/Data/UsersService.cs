@@ -154,5 +154,42 @@ namespace SoccerAppBackend.Data
                 return user;
             }
         }
+
+
+        public async Task<User> DeactivateUserById(int userId)
+        {
+            User userToDeactivate = new User();
+
+            string sqlQuery = "UPDATE SoccerAppUsers SET IsActive = 0 WHERE UserId = @userId";
+
+            try
+            {
+                using SqlConnection connection = databaseSerivce.CreateDbConnection();
+                await connection.OpenAsync();
+                using SqlCommand command = new SqlCommand(sqlQuery, connection);
+                command.Parameters.AddWithValue("@userId", userId);
+
+                int rowsAffected = await command.ExecuteNonQueryAsync();
+
+                if (rowsAffected > 0)
+                {
+                    userToDeactivate = await GetUserById(userId);
+                }
+
+                return userToDeactivate;
+            }
+            catch (SqlException sqlEx)
+            {
+                Console.WriteLine($"[SQL EXCEPTION thrown from SoccerAppBackend => UsersService => DeactivateUserById: {DateTime.Now}] - SQL Exception: {sqlEx.Message}");
+                Console.WriteLine(sqlEx.StackTrace);
+                return userToDeactivate;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[EXCEPTION thrown from SoccerAppBackend => UsersService => DeactivateUserById: {DateTime.Now}] - Exception: {ex.Message}");
+                Console.WriteLine(ex.StackTrace);
+                return userToDeactivate;
+            }
+        }
     }
 }
