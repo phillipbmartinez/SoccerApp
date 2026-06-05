@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.Data.SqlClient;
 using SoccerAppBackend.Models;
 
 namespace SoccerAppBackend.Data
@@ -105,6 +106,52 @@ namespace SoccerAppBackend.Data
                 Console.WriteLine($"[EXCEPTION thrown from SoccerAppBackend => UsersService => GetInactiveUsers: {DateTime.Now}] - Exception: {ex.Message}");
                 Console.WriteLine(ex.StackTrace);
                 return inactiveUsers;
+            }
+        }
+
+
+        public async Task<User> GetUserById(int userId)
+        {
+            User user = new User();
+
+            string sqlQuery = "SELECT * FROM SoccerAppUsers WHERE UserId = @userId";
+
+            try
+            {
+                using SqlConnection connection = databaseSerivce.CreateDbConnection();
+                await connection.OpenAsync();
+                using SqlCommand command = new SqlCommand(sqlQuery, connection);
+                command.Parameters.AddWithValue("@userId", userId);
+                SqlDataReader reader = await command.ExecuteReaderAsync();
+
+                while (await reader.ReadAsync())
+                {
+                    user.UserId = reader.GetInt32(reader.GetOrdinal("UserId"));
+                    user.FirstName = reader.GetString(reader.GetOrdinal("FirstName"));
+                    user.LastName = reader.GetString(reader.GetOrdinal("LastName"));
+                    user.Email = reader.GetString(reader.GetOrdinal("Email"));
+                    user.DateOfBirth = reader.GetDateTime(reader.GetOrdinal("DateOfBirth"));
+                    user.IsActive = reader.GetBoolean(reader.GetOrdinal("IsActive"));
+                    user.RoleId = reader.GetInt32(reader.GetOrdinal("RoleId"));
+                    user.CreatedAt = reader.GetDateTime(reader.GetOrdinal("CreatedAt"));
+                    user.ModifiedAt = reader.IsDBNull(reader.GetOrdinal("ModifiedAt"))
+                    ? null
+                    : reader.GetDateTime(reader.GetOrdinal("ModifiedAt"));
+                }
+
+                return user;
+            }
+            catch (SqlException sqlEx)
+            {
+                Console.WriteLine($"[SQL EXCEPTION thrown from SoccerAppBackend => UsersService => GetUserById: {DateTime.Now}] - SQL Exception: {sqlEx.Message}");
+                Console.WriteLine(sqlEx.StackTrace);
+                return user;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[EXCEPTION thrown from SoccerAppBackend => UsersService => GetUserById: {DateTime.Now}] - Exception: {ex.Message}");
+                Console.WriteLine(ex.StackTrace);
+                return user;
             }
         }
     }
