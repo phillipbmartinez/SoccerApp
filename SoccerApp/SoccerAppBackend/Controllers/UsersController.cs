@@ -49,5 +49,21 @@ namespace SoccerAppBackend.Controllers
                 return NotFound();
             }
         }
+
+
+        [HttpDelete("{userId}")]
+        public async Task<IActionResult> DeactivateUser(int userId)
+        {
+            User userToDelete = await usersService.DeactivateUserById(userId);
+
+            if (userToDelete.IsActive == false)
+            {
+                return Ok(userToDelete);
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
     }
 }
