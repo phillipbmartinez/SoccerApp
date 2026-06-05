@@ -24,5 +24,13 @@ namespace SoccerAppBackend.Controllers
 
             return Ok(users);
         }
+
+        [HttpGet("inactive")]
+        public async Task<IActionResult> GetInactiveUsers()
+        {
+            List<User> inactiveUsers = await usersService.GetInactiveUsers();
+
+            return Ok(inactiveUsers);
+        }
     }
 }
