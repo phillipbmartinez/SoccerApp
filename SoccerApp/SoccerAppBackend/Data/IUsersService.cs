@@ -4,6 +4,7 @@ namespace SoccerAppBackend.Data
 {
     public interface IUsersService
     {
+        Task<User> CreateUser(User userToCreate);
         Task<User> DeactivateUserById(int userId);
         Task<List<User>> GetActiveUsers();
         Task<List<User>> GetInactiveUsers();

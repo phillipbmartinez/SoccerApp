@@ -237,5 +237,64 @@ namespace SoccerAppBackend.Data
                 return userToUpdate;
             }
         }
+
+
+        public async Task<User> CreateUser(User userToCreate)
+        {
+            User newUser = new User();
+
+            string sqlQuery = @"
+                INSERT INTO SoccerAppUsers (FirstName, LastName, Email, DateOfBirth, RoleId)
+                VALUES (@firstName, @lastName, @email, @dateOfBirth, @roleId)
+                SELECT CAST(SCOPE_IDENTITY() AS INT);";
+
+            try
+            {
+                using SqlConnection connection = databaseSerivce.CreateDbConnection();
+                await connection.OpenAsync();
+                using SqlCommand command = new SqlCommand(sqlQuery, connection);
+
+                command.Parameters.AddWithValue("@firstName", userToCreate.FirstName);
+                command.Parameters.AddWithValue("@lastName", userToCreate.LastName);
+                command.Parameters.AddWithValue("@email", userToCreate.Email);
+                command.Parameters.AddWithValue("@dateOfBirth", userToCreate.DateOfBirth);
+
+                if (!string.IsNullOrWhiteSpace(userToCreate.RoleId.ToString()))
+                {
+                    command.Parameters.AddWithValue("@roleId", userToCreate.RoleId);
+                }
+                else
+                {
+                    command.Parameters.AddWithValue("@roleId", DBNull.Value);
+                }
+
+                var result = await command.ExecuteScalarAsync();
+
+                if (result != null && int.TryParse(result.ToString(), out int newUserId))
+                {
+                    newUser = await GetUserById(newUserId);
+
+                    Console.WriteLine($"[SUCCESS : {DateTime.Now}] - New User inserted. ID: {newUserId} from SoccerAppBackend => UsersService => CreateUser");
+                }
+                else
+                {
+                    Console.WriteLine($"[ERROR : {DateTime.Now}] - Error creating new User record in database from SoccerAppBackend => UsersService => CreateUser");
+                }
+
+                return newUser;
+            }
+            catch (SqlException sqlEx)
+            {
+                Console.WriteLine($"[SQL EXCEPTION thrown from SoccerAppBackend => UsersService => CreateUser: {DateTime.Now}] - SQL Exception: {sqlEx.Message}");
+                Console.WriteLine(sqlEx.StackTrace);
+                return newUser;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[EXCEPTION thrown from SoccerAppBackend => UsersService => CreateUser: {DateTime.Now}] - Exception: {ex.Message}");
+                Console.WriteLine(ex.StackTrace);
+                return newUser;
+            }
+        }
     }
 }
