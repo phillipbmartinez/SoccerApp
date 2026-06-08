@@ -74,5 +74,14 @@ namespace SoccerAppBackend.Controllers
 
             return Ok(updatedUser);
         }
+
+
+        [HttpPost]
+        public async Task<IActionResult> CreateUser(User userToCreate)
+        {
+            User newUser = await usersService.CreateUser(userToCreate);
+
+            return Ok(newUser);
+        }
     }
 }
