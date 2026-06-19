@@ -1,4 +1,7 @@
-﻿namespace SoccerAppBackend.Data
+﻿using Microsoft.Data.SqlClient;
+using SoccerAppBackend.Models;
+
+namespace SoccerAppBackend.Data
 {
     public class RolesService : IRolesService
     {
@@ -7,6 +10,46 @@
         public RolesService(IDatabaseService databaseService)
         {
             this.databaseService = databaseService;
+        }
+
+
+        public async Task<List<RoleDto>> GetRoles()
+        {
+            List<RoleDto> roles = new List<RoleDto>();
+
+            string sqlQuery = "SELECT * FROM SoccerAppRoles";
+
+            try
+            {
+                using SqlConnection connection = databaseService.CreateDbConnection();
+                await connection.OpenAsync();
+                using SqlCommand command = new SqlCommand(sqlQuery, connection);
+                SqlDataReader reader = await command.ExecuteReaderAsync();
+
+                while (await reader.ReadAsync())
+                {
+                    roles.Add(new RoleDto
+                    {
+                        RoleId = reader.GetInt32(reader.GetOrdinal("RoleId")),
+                        RoleName = reader.GetString(reader.GetOrdinal("RoleName")),
+                    });
+                }
+                ;
+
+                return roles;
+            }
+            catch (SqlException sqlEx)
+            {
+                Console.WriteLine($"[SQL EXCEPTION thrown from SoccerAppBackend => RolesService => GetRoles: {DateTime.Now}] - SQL Exception: {sqlEx.Message}");
+                Console.WriteLine(sqlEx.StackTrace);
+                return roles;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[EXCEPTION thrown from SoccerAppBackend => RolesService => GetRoles: {DateTime.Now}] - Exception: {ex.Message}");
+                Console.WriteLine(ex.StackTrace);
+                return roles;
+            }
         }
     }
 }
