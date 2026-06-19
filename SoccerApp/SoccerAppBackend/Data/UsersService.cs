@@ -6,11 +6,11 @@ namespace SoccerAppBackend.Data
 {
     public class UsersService : IUsersService
     {
-        private readonly IDatabaseService databaseSerivce;
+        private readonly IDatabaseService databaseService;
 
-        public UsersService(IDatabaseService databaseSerivce)
+        public UsersService(IDatabaseService databaseService)
         {
-            this.databaseSerivce = databaseSerivce;
+            this.databaseService = databaseService;
         }
 
 
@@ -22,7 +22,7 @@ namespace SoccerAppBackend.Data
 
             try
             {
-                using SqlConnection connection = databaseSerivce.CreateDbConnection();
+                using SqlConnection connection = databaseService.CreateDbConnection();
                 await connection.OpenAsync();
                 using SqlCommand command = new SqlCommand(sqlQuery, connection);
                 SqlDataReader reader = await command.ExecuteReaderAsync();
@@ -70,7 +70,7 @@ namespace SoccerAppBackend.Data
 
             try
             {
-                using SqlConnection connection = databaseSerivce.CreateDbConnection();
+                using SqlConnection connection = databaseService.CreateDbConnection();
                 await connection.OpenAsync();
                 using SqlCommand command = new SqlCommand(sqlQuery, connection);
                 SqlDataReader reader = await command.ExecuteReaderAsync();
@@ -118,7 +118,7 @@ namespace SoccerAppBackend.Data
 
             try
             {
-                using SqlConnection connection = databaseSerivce.CreateDbConnection();
+                using SqlConnection connection = databaseService.CreateDbConnection();
                 await connection.OpenAsync();
                 using SqlCommand command = new SqlCommand(sqlQuery, connection);
                 command.Parameters.AddWithValue("@userId", userId);
@@ -164,7 +164,7 @@ namespace SoccerAppBackend.Data
 
             try
             {
-                using SqlConnection connection = databaseSerivce.CreateDbConnection();
+                using SqlConnection connection = databaseService.CreateDbConnection();
                 await connection.OpenAsync();
                 using SqlCommand command = new SqlCommand(sqlQuery, connection);
                 command.Parameters.AddWithValue("@userId", userId);
@@ -203,7 +203,7 @@ namespace SoccerAppBackend.Data
 
             try
             {
-                using SqlConnection connection = databaseSerivce.CreateDbConnection();
+                using SqlConnection connection = databaseService.CreateDbConnection();
                 await connection.OpenAsync();
                 using SqlCommand command = new SqlCommand(sqlQuery, connection);
 
@@ -250,7 +250,7 @@ namespace SoccerAppBackend.Data
 
             try
             {
-                using SqlConnection connection = databaseSerivce.CreateDbConnection();
+                using SqlConnection connection = databaseService.CreateDbConnection();
                 await connection.OpenAsync();
                 using SqlCommand command = new SqlCommand(sqlQuery, connection);
 
