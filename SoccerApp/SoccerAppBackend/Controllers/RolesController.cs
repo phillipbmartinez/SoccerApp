@@ -26,5 +26,14 @@ namespace SoccerAppBackend.Controllers
 
             return Ok(roles);
         }
+
+
+        [HttpGet("{roleId}")]
+        public async Task<IActionResult> GetRoleById(int roleId)
+        {
+            RoleDto role = await rolesService.GetRoleById(roleId);
+
+            return Ok(role);
+        }
     }
 }
