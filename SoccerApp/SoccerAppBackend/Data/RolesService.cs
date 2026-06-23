@@ -90,5 +90,49 @@ namespace SoccerAppBackend.Data
                 return role;
             }
         }
+
+
+        public async Task<RoleDto> UpdateRole(RoleDto roleToUpdate)
+        {
+            string sqlQuery =
+                @"
+                    UPDATE SoccerAppRoles
+                    SET RoleName = @roleName, ModifiedAt = @modifiedAt
+                    WHERE RoleId = @roleId
+                    SELECT CAST(SCOPE_IDENTITY() AS INT)
+                ";
+
+            try
+            {
+                using SqlConnection connection = databaseService.CreateDbConnection();
+                await connection.OpenAsync();
+                using SqlCommand command = new SqlCommand(sqlQuery, connection);
+
+                command.Parameters.AddWithValue("@roleId", roleToUpdate.RoleId);
+                command.Parameters.AddWithValue("@roleName", roleToUpdate.RoleName);
+                command.Parameters.AddWithValue("@modifiedAt", DateTime.Now);
+
+                int rowsAffected = await command.ExecuteNonQueryAsync();
+
+                if (rowsAffected > 0)
+                {
+                    roleToUpdate = await GetRoleById(roleToUpdate.RoleId);
+                }
+
+                return roleToUpdate;
+            }
+            catch (SqlException sqlEx)
+            {
+                Console.WriteLine($"[SQL EXCEPTION thrown from SoccerAppBackend => RolesService => UpdateRole: {DateTime.Now}] - SQL Exception: {sqlEx.Message}");
+                Console.WriteLine(sqlEx.StackTrace);
+                return roleToUpdate;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[EXCEPTION thrown from SoccerAppBackend => RolesService => UpdateRole: {DateTime.Now}] - Exception: {ex.Message}");
+                Console.WriteLine(ex.StackTrace);
+                return roleToUpdate;
+            }
+        }
     }
 }

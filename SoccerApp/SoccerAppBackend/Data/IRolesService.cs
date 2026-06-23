@@ -6,5 +6,6 @@ namespace SoccerAppBackend.Data
     {
         Task<RoleDto> GetRoleById(int roleId);
         Task<List<RoleDto>> GetRoles();
+        Task<RoleDto> UpdateRole(RoleDto roleToUpdate);
     }
 }
