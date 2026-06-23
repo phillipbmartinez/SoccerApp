@@ -35,5 +35,14 @@ namespace SoccerAppBackend.Controllers
 
             return Ok(role);
         }
+
+
+        [HttpPut("{roleId}")]
+        public async Task<IActionResult> UpdateRole(RoleDto roleToUpdate)
+        {
+            RoleDto updatedRole = await rolesService.UpdateRole(roleToUpdate);
+
+            return Ok(updatedRole);
+        }
     }
 }
