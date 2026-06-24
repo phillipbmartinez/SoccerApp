@@ -16,6 +16,7 @@ namespace SoccerAppBackend
             builder.Services.AddScoped<ICoachesService, CoachesService>();
             builder.Services.AddScoped<IUsersService, UsersService>();
             builder.Services.AddScoped<IRolesService, RolesService>();
+            builder.Services.AddScoped<IPlayersService, PlayersService>();
 
             var app = builder.Build();
 
