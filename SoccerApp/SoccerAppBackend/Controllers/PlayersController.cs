@@ -26,9 +26,9 @@ namespace SoccerAppBackend.Controllers
 
 
         [HttpGet("{playerId}")]
-        public async Task<IActionResult> GetPlayerById(int playerId)
+        public async Task<IActionResult> GetActivePlayerById(int playerId)
         {
-            PlayerDto player = await playersService.GetPlayerById(playerId);
+            PlayerDto player = await playersService.GetActivePlayerById(playerId);
 
             if (player.PlayerId > 0)
             {
