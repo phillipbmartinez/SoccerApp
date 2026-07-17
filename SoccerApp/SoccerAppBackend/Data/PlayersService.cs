@@ -120,6 +120,60 @@ namespace SoccerAppBackend.Data
         }
 
 
+        public async Task<PlayerDto> GetAnyPlayerById(int playerId)
+        {
+            PlayerDto player = new PlayerDto();
+
+            string sqlQuery = @"SELECT * FROM SoccerAppPlayers WHERE PlayerId = @playerId";
+
+            try
+            {
+                using SqlConnection connection = databaseService.CreateDbConnection();
+                await connection.OpenAsync();
+                using SqlCommand command = new SqlCommand(sqlQuery, connection);
+
+                command.Parameters.AddWithValue("@playerId", playerId);
+
+                SqlDataReader reader = await command.ExecuteReaderAsync();
+
+                while (await reader.ReadAsync())
+                {
+                    player.PlayerId = reader.GetInt32(reader.GetOrdinal("PlayerId"));
+                    player.UserId = reader.IsDBNull(reader.GetOrdinal("UserId"))
+                        ? (int?)null
+                        : reader.GetInt32(reader.GetOrdinal("UserId"));
+                    player.TeamId = reader.IsDBNull(reader.GetOrdinal("TeamId"))
+                        ? (int?)null
+                        : reader.GetInt32(reader.GetOrdinal("TeamId"));
+                    player.FirstName = reader.GetString(reader.GetOrdinal("FirstName"));
+                    player.LastName = reader.GetString(reader.GetOrdinal("LastName"));
+                    player.JerseyNumber = reader.IsDBNull(reader.GetOrdinal("JerseyNumber"))
+                        ? (int?)null
+                        : reader.GetInt32(reader.GetOrdinal("JerseyNumber"));
+                    player.DateOfBirth = reader.IsDBNull(reader.GetOrdinal("DateOfBirth"))
+                        ? (DateTime?)null
+                        : reader.GetDateTime(reader.GetOrdinal("DateOfBirth"));
+                }
+                ;
+
+                return player;
+
+            }
+            catch (SqlException sqlEx)
+            {
+                Console.WriteLine($"[SQL EXCEPTION thrown from SoccerAppBackend => PlayersService => GetAnyPlayerById: {DateTime.Now}] - SQL Exception: {sqlEx.Message}");
+                Console.WriteLine(sqlEx.StackTrace);
+                return player;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[EXCEPTION thrown from SoccerAppBackend => PlayersService => GetAnyPlayerById: {DateTime.Now}] - Exception: {ex.Message}");
+                Console.WriteLine(ex.StackTrace);
+                return player;
+            }
+        }
+
+
         public async Task<PlayerDto> CreatePlayer(PlayerDto playerToCreate)
         {
             PlayerDto newPlayer = new PlayerDto();
@@ -247,6 +301,51 @@ namespace SoccerAppBackend.Data
                 Console.WriteLine($"[EXCEPTION thrown from SoccerAppBackend => PlayersService => UpdatePlayer: {DateTime.Now}] - Exception: {ex.Message}");
                 Console.WriteLine(ex.StackTrace);
                 return playerToUpdate;
+            }
+        }
+
+
+        public async Task<PlayerDto> DeactivatePlayerById(int playerId)
+        {
+            PlayerDto playerToDeactivate = new PlayerDto();
+
+            string sqlQuery =
+                @"
+                    UPDATE SoccerAppPlayers
+                    SET IsActive = 0,
+                        ModifiedAt = @modifiedAt
+                    WHERE playerId = @playerId
+                ";
+
+            try
+            {
+                using SqlConnection connection = databaseService.CreateDbConnection();
+                await connection.OpenAsync();
+                using SqlCommand command = new SqlCommand(sqlQuery, connection);
+
+                command.Parameters.AddWithValue("@playerId", playerId);
+                command.Parameters.AddWithValue("@modifiedAt", DateTime.Now);
+
+                int rowsAffected = await command.ExecuteNonQueryAsync();
+
+                if (rowsAffected > 0)
+                {
+                    playerToDeactivate = await GetAnyPlayerById(playerId);
+                }
+
+                return playerToDeactivate;
+            }
+            catch (SqlException sqlEx)
+            {
+                Console.WriteLine($"[SQL EXCEPTION thrown from SoccerAppBackend => PlayersService => DeactivatePlayerById: {DateTime.Now}] - SQL Exception: {sqlEx.Message}");
+                Console.WriteLine(sqlEx.StackTrace);
+                return playerToDeactivate;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[EXCEPTION thrown from SoccerAppBackend => PlayersService => DeactivatePlayerById: {DateTime.Now}] - Exception: {ex.Message}");
+                Console.WriteLine(ex.StackTrace);
+                return playerToDeactivate;
             }
         }
     }

@@ -5,7 +5,9 @@ namespace SoccerAppBackend.Data
     public interface IPlayersService
     {
         Task<PlayerDto> CreatePlayer(PlayerDto playerToCreate);
+        Task<PlayerDto> DeactivatePlayerById(int playerId);
         Task<List<PlayerDto>> GetActivePlayers();
+        Task<PlayerDto> GetAnyPlayerById(int playerId);
         Task<PlayerDto> GetPlayerById(int playerId);
         Task<PlayerDto> UpdatePlayer(PlayerDto playerToUpdate);
     }
