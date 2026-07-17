@@ -24,6 +24,7 @@ namespace SoccerAppBackend.Controllers
             return Ok(activePlayers);
         }
 
+
         [HttpGet("{playerId}")]
         public async Task<IActionResult> GetPlayerById(int playerId)
         {
@@ -53,6 +54,15 @@ namespace SoccerAppBackend.Controllers
             {
                 return BadRequest();
             }
+        }
+
+
+        [HttpPut("{playerId}")]
+        public async Task<IActionResult> UpdatePlayer(PlayerDto playerToUpdate)
+        {
+            playerToUpdate = await playersService.UpdatePlayer(playerToUpdate);
+
+            return Ok(playerToUpdate);
         }
     }
 }
