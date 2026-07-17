@@ -8,7 +8,7 @@ namespace SoccerAppBackend.Data
         Task<PlayerDto> DeactivatePlayerById(int playerId);
         Task<List<PlayerDto>> GetActivePlayers();
         Task<PlayerDto> GetAnyPlayerById(int playerId);
-        Task<PlayerDto> GetPlayerById(int playerId);
+        Task<PlayerDto> GetActivePlayerById(int playerId);
         Task<PlayerDto> UpdatePlayer(PlayerDto playerToUpdate);
     }
 }

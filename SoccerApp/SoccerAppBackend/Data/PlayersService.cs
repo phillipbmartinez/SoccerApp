@@ -66,7 +66,7 @@ namespace SoccerAppBackend.Data
         }
 
 
-        public async Task<PlayerDto> GetPlayerById(int playerId)
+        public async Task<PlayerDto> GetActivePlayerById(int playerId)
         {
             PlayerDto player = new PlayerDto();
 
@@ -227,7 +227,7 @@ namespace SoccerAppBackend.Data
 
                 if (result != null && int.TryParse(result.ToString(), out int newPlayerId))
                 {
-                    newPlayer = await GetPlayerById(newPlayerId);
+                    newPlayer = await GetActivePlayerById(newPlayerId);
 
                     Console.WriteLine($"[SUCCESS : {DateTime.Now}] - New Plasyer inserted. ID: {newPlayerId} from SoccerAppBackend => PlayersService => CreatePlayer");
                 }
@@ -285,7 +285,7 @@ namespace SoccerAppBackend.Data
 
                 if (rowsAffected > 0)
                 {
-                    playerToUpdate = await GetPlayerById(playerToUpdate.PlayerId);
+                    playerToUpdate = await GetActivePlayerById(playerToUpdate.PlayerId);
                 }
 
                 return playerToUpdate;
