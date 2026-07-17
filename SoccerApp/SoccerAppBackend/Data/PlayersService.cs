@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using System.Runtime.InteropServices;
+using Microsoft.Data.SqlClient;
 using SoccerAppBackend.Models;
 
 namespace SoccerAppBackend.Data
@@ -195,6 +196,57 @@ namespace SoccerAppBackend.Data
                 Console.WriteLine($"[EXCEPTION thrown from SoccerAppBackend => PlayersService => CreatePlayer: {DateTime.Now}] - Exception: {ex.Message}");
                 Console.WriteLine(ex.StackTrace);
                 return newPlayer;
+            }
+        }
+
+
+        public async Task<PlayerDto> UpdatePlayer(PlayerDto playerToUpdate)
+        {
+            string sqlQuery =
+                @"
+                    UPDATE SoccerAppPlayers
+                    SET FirstName = @firstName,
+                        LastName = @lastName,
+                        JerseyNumber = @jerseyNumber,
+                        DateOfBirth = @dateOfBirth,
+                        ModifiedAt = @modifiedAt
+                    WHERE playerId = @playerId
+                    SELECT CAST(SCOPE_IDENTITY() AS INT)
+                ";
+
+            try
+            {
+                using SqlConnection connection = databaseService.CreateDbConnection();
+                await connection.OpenAsync();
+                using SqlCommand command = new SqlCommand(sqlQuery, connection);
+
+                command.Parameters.AddWithValue("@playerId", playerToUpdate.PlayerId);
+                command.Parameters.AddWithValue("@firstName", playerToUpdate.FirstName);
+                command.Parameters.AddWithValue("@lastName", playerToUpdate.LastName);
+                command.Parameters.AddWithValue("@jerseyNumber", playerToUpdate.JerseyNumber);
+                command.Parameters.AddWithValue("@dateOfBirth", playerToUpdate.DateOfBirth);
+                command.Parameters.AddWithValue("@modifiedAt", DateTime.Now);
+
+                int rowsAffected = await command.ExecuteNonQueryAsync();
+
+                if (rowsAffected > 0)
+                {
+                    playerToUpdate = await GetPlayerById(playerToUpdate.PlayerId);
+                }
+
+                return playerToUpdate;
+            }
+            catch (SqlException sqlEx)
+            {
+                Console.WriteLine($"[SQL EXCEPTION thrown from SoccerAppBackend => PlayersService => UpdatePlayer: {DateTime.Now}] - SQL Exception: {sqlEx.Message}");
+                Console.WriteLine(sqlEx.StackTrace);
+                return playerToUpdate;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[EXCEPTION thrown from SoccerAppBackend => PlayersService => UpdatePlayer: {DateTime.Now}] - Exception: {ex.Message}");
+                Console.WriteLine(ex.StackTrace);
+                return playerToUpdate;
             }
         }
     }
