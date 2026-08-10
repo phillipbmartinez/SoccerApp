@@ -9,5 +9,6 @@
         public string LastName { get; set; }
         public int? JerseyNumber { get; set; }
         public DateTime? DateOfBirth { get; set; }
+        public List<PlayerGameStatDto> GameStats = new List<PlayerGameStatDto>();
     }
 }
