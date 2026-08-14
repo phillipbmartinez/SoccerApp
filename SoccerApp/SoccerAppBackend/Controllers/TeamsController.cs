@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SoccerAppBackend.Data;
+using SoccerAppBackend.Models;
 
 namespace SoccerAppBackend.Controllers
 {
@@ -6,15 +8,19 @@ namespace SoccerAppBackend.Controllers
     [Route("api/[controller]")]
     public class TeamsController : Controller
     {
-        public TeamsController()
+        private readonly ITeamsService teamsService;
+
+        public TeamsController(ITeamsService teamsService)
         {
-        
+            this.teamsService = teamsService;
         }
 
 
-        public IActionResult Index()
+        public async Task<IActionResult> GetActiveTeams()
         {
-            return View();
+            List<TeamDto> activeTeams = await teamsService.GetActiveTeams();
+
+            return Ok(activeTeams);
         }
     }
 }
