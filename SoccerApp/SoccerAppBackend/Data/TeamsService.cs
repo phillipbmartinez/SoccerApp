@@ -55,5 +55,47 @@ namespace SoccerAppBackend.Data
                 return activeTeams;
             }
         }
+
+        public async Task<TeamDto> GetTeamById(int teamId)
+        {
+            TeamDto team = new TeamDto();
+            string sqlQuery = @"SELECT * FROM SoccerAppTeams WHERE TeamId = @teamId";
+
+            try
+            {
+                using SqlConnection connection = databaseService.CreateDbConnection();
+                await connection.OpenAsync();
+                using SqlCommand command = new SqlCommand(sqlQuery, connection);
+                command.Parameters.AddWithValue("@teamId", teamId);
+                SqlDataReader reader = await command.ExecuteReaderAsync();
+
+                while (await reader.ReadAsync())
+                {
+
+                    team.TeamId = reader.GetInt32(reader.GetOrdinal("TeamId"));
+                    team.TeamName = reader.GetString(reader.GetOrdinal("TeamName"));
+                    team.CoachId = reader.IsDBNull(reader.GetOrdinal("CoachId"))
+                            ? (int?)null
+                            : reader.GetInt32(reader.GetOrdinal("CoachId"));
+                    team.AgeGroup = reader.GetString(reader.GetOrdinal("AgeGroup"));
+                }
+                ;
+
+                return team;
+
+            }
+            catch (SqlException sqlEx)
+            {
+                Console.WriteLine($"[SQL EXCEPTION thrown from SoccerAppBackend => TeamsService => GetTeamById: {DateTime.Now}] - SQL Exception: {sqlEx.Message}");
+                Console.WriteLine(sqlEx.StackTrace);
+                return team;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[EXCEPTION thrown from SoccerAppBackend => TeamsService => GetTeamById: {DateTime.Now}] - Exception: {ex.Message}");
+                Console.WriteLine(ex.StackTrace);
+                return team;
+            }
+        }
     }
 }
