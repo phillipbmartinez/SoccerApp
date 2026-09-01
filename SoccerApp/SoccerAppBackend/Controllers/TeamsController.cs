@@ -52,5 +52,13 @@ namespace SoccerAppBackend.Controllers
                 return BadRequest();
             }
         }
+
+        [HttpPut("{teamId}")]
+        public async Task<IActionResult> UpdateTeam(TeamDto teamToUpdate)
+        {
+            teamToUpdate = await teamsService.UpdateTeam(teamToUpdate);
+
+            return Ok(teamToUpdate);
+        }
     }
 }
