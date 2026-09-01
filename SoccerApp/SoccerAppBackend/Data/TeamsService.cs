@@ -97,5 +97,79 @@ namespace SoccerAppBackend.Data
                 return team;
             }
         }
+
+        public async Task<TeamDto> CreateTeam(TeamDto teamToCreate)
+        {
+            TeamDto newTeam = new TeamDto();
+
+            string sqlQuery =
+                @"
+                    INSERT INTO SoccerAppTeams (TeamName, CoachId, AgeGroup)
+                    VALUES (@teamName, @coachId, @AgeGroup)
+                    SELECT CAST(SCOPE_IDENTITY() AS INT);
+                ";
+
+            try
+            {
+                using SqlConnection connection = databaseService.CreateDbConnection();
+                await connection.OpenAsync();
+                using SqlCommand command = new SqlCommand(sqlQuery, connection);
+
+                if (!string.IsNullOrWhiteSpace(teamToCreate.TeamName.ToString()))
+                {
+                    command.Parameters.AddWithValue("@teamName", teamToCreate.TeamName);
+                }
+                else
+                {
+                    command.Parameters.AddWithValue("@teamName", DBNull.Value);
+                }
+
+                if (!string.IsNullOrWhiteSpace(teamToCreate.CoachId?.ToString()))
+                {
+                    command.Parameters.AddWithValue("@coachId", teamToCreate.CoachId);
+                }
+                else
+                {
+                    command.Parameters.AddWithValue("@coachId", DBNull.Value);
+                }
+
+                if (!string.IsNullOrWhiteSpace(teamToCreate.AgeGroup?.ToString()))
+                {
+                    command.Parameters.AddWithValue("@ageGroup", teamToCreate.AgeGroup);
+                }
+                else
+                {
+                    command.Parameters.AddWithValue("@ageGroup", DBNull.Value);
+                }
+
+                var result = await command.ExecuteScalarAsync();
+
+                if (result != null && int.TryParse(result.ToString(), out int newTeamId))
+                {
+                    newTeam = await GetTeamById(newTeamId);
+
+                    Console.WriteLine($"[SUCCESS : {DateTime.Now}] - New Team inserted. ID: {newTeamId} from SoccerAppBackend => TeamsService => CreateTeam");
+                }
+                else
+                {
+                    Console.WriteLine($"[ERROR : {DateTime.Now}] - Error creating new Player record in database from SoccerAppBackend => TeamsService => CreateTeam");
+                }
+
+                return newTeam;
+
+            }
+            catch (SqlException sqlEx)
+            {
+                Console.WriteLine($"[SQL EXCEPTION thrown from SoccerAppBackend => TeamsService => CreateTeam: {DateTime.Now}] - SQL Exception: {sqlEx.Message}");
+                Console.WriteLine(sqlEx.StackTrace);
+                return newTeam;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[EXCEPTION thrown from SoccerAppBackend => TeamsService => CreateTeam: {DateTime.Now}] - Exception: {ex.Message}");
+                Console.WriteLine(ex.StackTrace);
+                return newTeam;
+            }
+        }
     }
 }

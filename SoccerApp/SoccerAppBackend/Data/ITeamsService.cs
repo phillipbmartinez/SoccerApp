@@ -4,6 +4,7 @@ namespace SoccerAppBackend.Data
 {
     public interface ITeamsService
     {
+        Task<TeamDto> CreateTeam(TeamDto teamToCreate);
         Task<List<TeamDto>> GetActiveTeams();
         Task<TeamDto> GetTeamById(int teamId);
     }
