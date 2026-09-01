@@ -37,5 +37,20 @@ namespace SoccerAppBackend.Controllers
                 return NotFound();
             }
         }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateTeam(TeamDto teamToCreate)
+        {
+            TeamDto team = await teamsService.CreateTeam(teamToCreate);
+
+            if (team.TeamId != 0)
+            {
+                return Ok(team);
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
     }
 }
