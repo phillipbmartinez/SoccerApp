@@ -7,5 +7,6 @@ namespace SoccerAppBackend.Data
         Task<TeamDto> CreateTeam(TeamDto teamToCreate);
         Task<List<TeamDto>> GetActiveTeams();
         Task<TeamDto> GetTeamById(int teamId);
+        Task<TeamDto> UpdateTeam(TeamDto teamToUpdate);
     }
 }

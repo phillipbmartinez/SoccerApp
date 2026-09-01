@@ -171,5 +171,53 @@ namespace SoccerAppBackend.Data
                 return newTeam;
             }
         }
+
+        public async Task<TeamDto> UpdateTeam(TeamDto teamToUpdate)
+        {
+            string sqlQuery =
+                @"
+                    UPDATE SoccerAppTeams
+                    SET TeamName = @teamName,
+                        CoachId = @coachId,
+                        AgeGroup = @ageGroup,
+                        ModifiedAt = @modifiedAt
+                    WHERE TeamId = @teamId
+                    SELECT CAST(SCOPE_IDENTITY() AS INT)
+                ";
+
+            try
+            {
+                using SqlConnection connection = databaseService.CreateDbConnection();
+                await connection.OpenAsync();
+                using SqlCommand command = new SqlCommand(sqlQuery, connection);
+
+                command.Parameters.AddWithValue("@teamId", teamToUpdate.TeamId);
+                command.Parameters.AddWithValue("@teamName", teamToUpdate.TeamName);
+                command.Parameters.AddWithValue("@coachId", teamToUpdate.CoachId);
+                command.Parameters.AddWithValue("@AgeGroup", teamToUpdate.AgeGroup);
+                command.Parameters.AddWithValue("@modifiedAt", DateTime.Now);
+
+                int rowsAffected = await command.ExecuteNonQueryAsync();
+
+                if (rowsAffected > 0)
+                {
+                    teamToUpdate = await GetTeamById(teamToUpdate.TeamId);
+                }
+
+                return teamToUpdate;
+            }
+            catch (SqlException sqlEx)
+            {
+                Console.WriteLine($"[SQL EXCEPTION thrown from SoccerAppBackend => TeamsService => UpdateTeam: {DateTime.Now}] - SQL Exception: {sqlEx.Message}");
+                Console.WriteLine(sqlEx.StackTrace);
+                return teamToUpdate;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[EXCEPTION thrown from SoccerAppBackend => TeamsService => UpdateTeam: {DateTime.Now}] - Exception: {ex.Message}");
+                Console.WriteLine(ex.StackTrace);
+                return teamToUpdate;
+            }
+        }
     }
 }
