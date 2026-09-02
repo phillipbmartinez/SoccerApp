@@ -60,5 +60,13 @@ namespace SoccerAppBackend.Controllers
 
             return Ok(teamToUpdate);
         }
+
+        [HttpDelete("{teamId}")]
+        public async Task<IActionResult> DeactivateTeam(int teamId)
+        {
+            TeamDto teamToDeactivate = await teamsService.DeactivateTeam(teamId);
+
+            return Ok(teamToDeactivate);
+        }
     }
 }
