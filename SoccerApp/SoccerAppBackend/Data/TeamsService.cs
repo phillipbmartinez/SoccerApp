@@ -219,5 +219,49 @@ namespace SoccerAppBackend.Data
                 return teamToUpdate;
             }
         }
+
+        public async Task<TeamDto> DeactivateTeam(int teamId)
+        {
+            TeamDto teamToDeactivate = new TeamDto();
+
+            string sqlQuery =
+                @"
+                    UPDATE SoccerAppTeams
+                    SET IsActive = 0,
+                        ModifiedAt = @modifiedAt
+                    WHERE TeamId = @teamId
+                ";
+
+            try
+            {
+                using SqlConnection connection = databaseService.CreateDbConnection();
+                await connection.OpenAsync();
+                using SqlCommand command = new SqlCommand(sqlQuery, connection);
+
+                command.Parameters.AddWithValue("@teamId", teamId);
+                command.Parameters.AddWithValue("@modifiedAt", DateTime.Now);
+
+                int rowsAffected = await command.ExecuteNonQueryAsync();
+
+                if (rowsAffected > 0)
+                {
+                    teamToDeactivate = await GetTeamById(teamId);
+                }
+
+                return teamToDeactivate;
+            }
+            catch (SqlException sqlEx)
+            {
+                Console.WriteLine($"[SQL EXCEPTION thrown from SoccerAppBackend => TeamsService => DeactivateTeam: {DateTime.Now}] - SQL Exception: {sqlEx.Message}");
+                Console.WriteLine(sqlEx.StackTrace);
+                return teamToDeactivate;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[EXCEPTION thrown from SoccerAppBackend => TeamsService => DeactivateTeam: {DateTime.Now}] - Exception: {ex.Message}");
+                Console.WriteLine(ex.StackTrace);
+                return teamToDeactivate;
+            }
+        }
     }
 }
