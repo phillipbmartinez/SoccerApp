@@ -10,5 +10,6 @@
         public int? TeamScore { get; set; }
         public int? OpponentScore { get; set; }
         public string? Notes { get; set; }
+        public string GameStatus { get; set; }
     }
 }
