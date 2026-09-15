@@ -1,0 +1,29 @@
+﻿@model List<CoachViewModel>
+
+@{
+}
+
+<table class="table table-striped table-hover text-center">
+    <thead>
+        <tr>
+            <th scope="col">Coach Id</th>
+            <th scope="col">Coaching License</th>
+            <th scope="col">Started Coaching</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (CoachViewModel coach in Model)
+        {
+            <tr>
+                <td>@coach.CoachId</td>
+                <td>@coach.CoachingLicense</td>
+                <td>@coach.StartedCoachingDate.Year</td>
+                <td><a class="btn btn-link" asp-controller="coaches" asp-action="getcoach" asp-route-Id="@coach.CoachId">View</a></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
