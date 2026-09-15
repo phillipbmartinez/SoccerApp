@@ -1,3 +1,5 @@
+using ArsenalAcademy.Services;
+
 namespace ArsenalAcademy
 {
     public class Program
@@ -8,6 +10,14 @@ namespace ArsenalAcademy
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            builder.Services.AddHttpClient("SoccerAppApi", client =>
+            {
+                client.BaseAddress = new Uri("https://localhost:7054/api/");
+                client.DefaultRequestHeaders.Add("Accept", "application/json");
+            });
+
+            builder.Services.AddScoped<ICoachesApiService, CoachesApiService>();
 
             var app = builder.Build();
 
