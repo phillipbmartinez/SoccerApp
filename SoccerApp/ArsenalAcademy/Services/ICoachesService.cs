@@ -4,7 +4,8 @@ namespace ArsenalAcademy.Services
 {
     public interface ICoachesApiService
     {
-        Task<List<CoachViewModel>> GetAllCoaches();
-        Task<CoachViewModel> GetCoachById(int coachId);
+        Task<CreateCoachViewModel> CreateCoach(CreateCoachViewModel coachToCreate);
+        Task<List<ViewCoachViewModel>> GetAllCoaches();
+        Task<ViewCoachViewModel> GetCoachById(int coachId);
     }
 }
