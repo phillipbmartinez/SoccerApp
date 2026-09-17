@@ -10,21 +10,23 @@ namespace SoccerAppBackend.Controllers
     {
         private readonly IDatabaseService databaseSerivce;
         private readonly ICoachesService coachesService;
+        private readonly ICoachesUsersService coachesUsersService;
 
-        public CoachesController(IDatabaseService databaseSerivce, ICoachesService coachesService)
+        public CoachesController(IDatabaseService databaseSerivce, ICoachesService coachesService, ICoachesUsersService coachesUsersService)
         {
             this.databaseSerivce = databaseSerivce;
             this.coachesService = coachesService;
+            this.coachesUsersService = coachesUsersService;
         }
 
 
-        [HttpGet]
-        public async Task<IActionResult> GetAllActiveCoaches()
-        {
-            List<Coach> coaches = await coachesService.GetActiveCoaches();
+        //[HttpGet]
+        //public async Task<IActionResult> GetAllActiveCoaches()
+        //{
+        //    List<Coach> coaches = await coachesService.GetActiveCoaches();
 
-            return Ok(coaches);
-        }
+        //    return Ok(coaches);
+        //}
 
 
         [HttpGet("inactive")]
@@ -36,20 +38,20 @@ namespace SoccerAppBackend.Controllers
         }
 
 
-        [HttpGet("{coachId}")]
-        public async Task<IActionResult> GetCoachById(int coachId)
-        {
-            Coach coach = await coachesService.GetCoachById(coachId);
+        //[HttpGet("{coachId}")]
+        //public async Task<IActionResult> GetCoachById(int coachId)
+        //{
+        //    Coach coach = await coachesService.GetCoachById(coachId);
 
-            if (coach.CoachId > 0)
-            {
-                return Ok(coach);
-            }
-            else
-            {
-                return NotFound();
-            }
-        }
+        //    if (coach.CoachId > 0)
+        //    {
+        //        return Ok(coach);
+        //    }
+        //    else
+        //    {
+        //        return NotFound();
+        //    }
+        //}
 
         [HttpDelete("{coachId}")]
         public async Task<IActionResult> DeleteCoachById(int coachId)
@@ -73,6 +75,29 @@ namespace SoccerAppBackend.Controllers
             Coach newCoach = await coachesService.CreateCoach(coachtoCreate);
 
             return Ok(newCoach);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllActiveCoachesUsers()
+        {
+            List<CoachUserDto> coaches = await coachesUsersService.GetActiveCoachesUsers();
+
+            return Ok(coaches);
+        }
+
+        [HttpGet("{coachId}")]
+        public async Task<IActionResult> GetCoachUserByCoachId(int coachId)
+        {
+            CoachUserDto coach = await coachesUsersService.GetCoachUserByCoachId(coachId);
+
+            if (coach.CoachId > 0)
+            {
+                return Ok(coach);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
     }
 }
