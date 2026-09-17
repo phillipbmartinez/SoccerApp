@@ -16,7 +16,7 @@ namespace ArsenalAcademy.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            List<CoachViewModel> coaches = await coachesApiService.GetAllCoaches();
+            List<ViewCoachViewModel> coaches = await coachesApiService.GetAllCoaches();
 
             if (coaches != null && coaches.Count > 0)
             {
@@ -31,11 +31,39 @@ namespace ArsenalAcademy.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCoach(int id)
         {
-            CoachViewModel coach = await coachesApiService.GetCoachById(id);
+            ViewCoachViewModel coach = await coachesApiService.GetCoachById(id);
 
             if (coach != null && coach.CoachId > 0)
             {
                 return View(coach);
+            }
+            else
+            {
+                return View();
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CreateCoach()
+        {
+            if (ModelState.IsValid)
+            {
+                return View();
+            }
+            else
+            {
+                return View();
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateCoach([FromForm] CreateCoachViewModel coachToCreate)
+        {
+            if (ModelState.IsValid)
+            {
+                coachToCreate = await coachesApiService.CreateCoach(coachToCreate);
+
+                return View(coachToCreate);
             }
             else
             {
