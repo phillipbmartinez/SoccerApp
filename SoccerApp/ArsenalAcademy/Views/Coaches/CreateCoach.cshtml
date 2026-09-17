@@ -1,0 +1,47 @@
+﻿@model CreateCoachViewModel
+
+@{
+}
+
+<div class="row text-center">
+    <h2>Create New Coach</h2>
+</div>
+<br />
+<form class="row g-3">
+    <div class="row mb-3 justify-content-center">
+        <div class="col-md-4">
+            <label for="inputFirstName" class="form-label">First Name</label>
+            <input type="text" class="form-control" id="inputFirstName">
+        </div>
+        <div class="col-md-4">
+            <label for="inputLastName" class="form-label">Last Name</label>
+            <input type="text" class="form-control" id="inputLastName">
+        </div>
+    </div>
+    <div class="row mb-3 justify-content-center">
+        <div class="col-md-4">
+            <label for="inputEmail" class="form-label">Email</label>
+            <input type="email" class="form-control" id="inputEmail">
+        </div>
+        <div class="col-md-4">
+            <label for="inputDateOfBirth" class="form-label">Date of Birth</label>
+            <input type="date" class="form-control" id="inputDateOfBirth">
+        </div>
+    </div>
+    <div class="row mb-3 justify-content-center">
+        <div class="col-4">
+            <label for="inputCoachingLicense" class="form-label">Coaching License</label>
+            <input type="text" class="form-control" id="inputCoachingLicense" placeholder="D, C, B, etc.">
+        </div>
+        <div class="col-md-4">
+            <label for="inputStartedCoachingDate" class="form-label">Started Coaching Date</label>
+            <input type="date" class="form-control" id="inputStartedCoachingDate">
+        </div>
+    </div>
+    <div class="row mt-2 justify-content-center">
+        <div class="text-center">
+            <button type="submit" class="btn btn-success">Submit</button>
+            <a role="button" class="btn btn-primary" asp-controller="coaches" asp-action="index">Back</a>
+        </div>
+    </div>
+</form>
