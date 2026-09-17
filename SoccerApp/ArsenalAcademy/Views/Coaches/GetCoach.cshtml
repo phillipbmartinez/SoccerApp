@@ -1,16 +1,18 @@
-﻿@model CoachViewModel
+﻿@model ViewCoachViewModel
 
 @{
 }
 
 <div class="row text-center">
-    <h2>Coach</h2>
+    <h2>Coach - @Model.FirstName</h2>
 </div>
 <div class="row">
     <table class="table table-striped table-hover text-center">
         <thead>
             <tr>
-                <th scope="col">Coach Id</th>
+                <th scope="col">First Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">Team</th>
                 <th scope="col">Coaching License</th>
                 <th scope="col">Started Coaching</th>
             </tr>
@@ -19,7 +21,16 @@
             @if (Model != null && Model.CoachId > 0)
             {
                 <tr>
-                    <td>@Model.CoachId</td>
+                    <td>@Model.FirstName</td>
+                    <td>@Model.LastName</td>
+                    @if (!string.IsNullOrWhiteSpace(@Model.TeamName))
+                    {
+                        <td>@Model.TeamName</td>
+                    }
+                    else
+                    {
+                        <td>No team assigned currently.</td>
+                    }
                     <td>@Model.CoachingLicense</td>
                     <td>@Model.StartedCoachingDate.Year</td>
                 </tr>
