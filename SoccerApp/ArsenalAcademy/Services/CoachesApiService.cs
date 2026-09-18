@@ -57,15 +57,30 @@ namespace ArsenalAcademy.Services
         {
             HttpClient httpClient = httpClientFactory.CreateClient("SoccerAppApi");
             CreateCoachViewModel newCoachRecord = new CreateCoachViewModel();
+            UserViewModel userViewModel = new UserViewModel()
+            {
+                FirstName = coachToCreate.FirstName,
+                LastName = coachToCreate.LastName,
+                Email = coachToCreate.Email,
+                DateOfBirth = coachToCreate.DateOfBirth,
+            };
+            CoachViewModel coachViewModel = new CoachViewModel()
+            {
+                CoachingLicense = coachToCreate.CoachingLicense,
+                StartedCoachingDate = coachToCreate.StartedCoachingDate,
+            };
 
             try
             {
-                HttpResponseMessage httpResponse = await httpClient.PostAsJsonAsync<CreateCoachViewModel>("coaches", coachToCreate);
-                httpResponse.EnsureSuccessStatusCode();
+                HttpResponseMessage userHttpResponse = await httpClient.PostAsJsonAsync<UserViewModel>("users", userViewModel);
+                userHttpResponse.EnsureSuccessStatusCode();
 
-                if (httpResponse.Content != null)
+                HttpResponseMessage coachHttpResponse = await httpClient.PostAsJsonAsync<CoachViewModel>("coaches", coachViewModel);
+                coachHttpResponse.EnsureSuccessStatusCode();
+
+                if (coachHttpResponse.Content != null && coachHttpResponse.Content != null)
                 {
-                    newCoachRecord = await httpResponse.Content.ReadFromJsonAsync<CreateCoachViewModel>();
+                    newCoachRecord = await httpClient.GetFromJsonAsync<CreateCoachViewModel>("coaches");
                 }
 
                 return newCoachRecord;
