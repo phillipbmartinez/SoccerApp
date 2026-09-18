@@ -67,7 +67,7 @@ namespace ArsenalAcademy.Controllers
             }
             else
             {
-                return View();
+                return View(coachToCreate);
             }
         }
     }
