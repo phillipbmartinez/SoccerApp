@@ -46,14 +46,7 @@ namespace ArsenalAcademy.Controllers
         [HttpGet]
         public async Task<IActionResult> CreateCoach()
         {
-            if (ModelState.IsValid)
-            {
-                return View();
-            }
-            else
-            {
-                return View();
-            }
+            return View();
         }
 
         [HttpPost]
@@ -63,7 +56,14 @@ namespace ArsenalAcademy.Controllers
             {
                 coachToCreate = await coachesApiService.CreateCoach(coachToCreate);
 
-                return View(coachToCreate);
+                if (coachToCreate.CoachId > 0 && coachToCreate.UserId > 0)
+                {
+                    return View("Index");
+                }
+                else
+                {
+                    return View(coachToCreate);
+                }
             }
             else
             {
