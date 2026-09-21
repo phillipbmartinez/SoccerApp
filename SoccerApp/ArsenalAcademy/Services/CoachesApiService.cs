@@ -40,6 +40,11 @@ namespace ArsenalAcademy.Services
 
             try
             {
+                var response = await httpClient.GetAsync($"coaches/{coachId}");
+                var contentResponse = await response.Content.ReadAsStringAsync();
+
+                Console.WriteLine($"Response: {contentResponse}");
+
                 coach = await httpClient.GetFromJsonAsync<ViewCoachViewModel>($"coaches/{coachId}");
 
                 return coach;
@@ -64,6 +69,7 @@ namespace ArsenalAcademy.Services
                 Email = coachToCreate.Email,
                 DateOfBirth = coachToCreate.DateOfBirth,
             };
+
             CoachViewModel coachViewModel = new CoachViewModel()
             {
                 CoachingLicense = coachToCreate.CoachingLicense,
@@ -75,12 +81,26 @@ namespace ArsenalAcademy.Services
                 HttpResponseMessage userHttpResponse = await httpClient.PostAsJsonAsync<UserViewModel>("users", userViewModel);
                 userHttpResponse.EnsureSuccessStatusCode();
 
+                string newUserData = await userHttpResponse.Content.ReadAsStringAsync();
+
                 HttpResponseMessage coachHttpResponse = await httpClient.PostAsJsonAsync<CoachViewModel>("coaches", coachViewModel);
                 coachHttpResponse.EnsureSuccessStatusCode();
 
-                if (coachHttpResponse.Content != null && coachHttpResponse.Content != null)
+                string newCoachData = await coachHttpResponse.Content.ReadAsStringAsync();
+
+                // Need to update the new coach record to have the new userid, so need a put action
+
+                if (!string.IsNullOrWhiteSpace(newUserData) && !string.IsNullOrWhiteSpace(newCoachData))
                 {
-                    newCoachRecord = await httpClient.GetFromJsonAsync<CreateCoachViewModel>("coaches");
+                    if (newUserData.Contains("userId") && newCoachData.Contains("coachId"))
+                    {
+                        string userId = newUserData.Split(",")[0].Split(":")[1].Trim();
+                        string coachId = newCoachData.Split(",")[0].Split(":")[1].Trim();
+
+                        HttpResponseMessage response = await httpClient.PutAsJsonAsync<CreateCoachViewModel>($"coaches/{coachId}/{userId}", newCoachRecord);
+
+                        newCoachRecord = await response.Content.ReadFromJsonAsync<CreateCoachViewModel>();
+                    }
                 }
 
                 return newCoachRecord;
