@@ -9,24 +9,19 @@ namespace SoccerAppBackend.Controllers
     public class GamesController : Controller
     {
         private readonly IGamesService gamesService;
+        private readonly IGamesTeamsOpponentsService gamesTeamsOpponentsService;
 
-        public GamesController(IGamesService gamesService)
+        public GamesController(IGamesService gamesService, IGamesTeamsOpponentsService gamesTeamsOpponentsService)
         {
             this.gamesService = gamesService;
+            this.gamesTeamsOpponentsService = gamesTeamsOpponentsService;
         }
 
         public async Task<IActionResult> GetAllGames()
         {
-            List<GameDto> activeGames = await gamesService.GetAllGames();
+            List<GameTeamOpponentDto> games = await gamesTeamsOpponentsService.GetGames();
 
-            if (activeGames.Count > 0)
-            {
-                return Ok(activeGames);
-            }
-            else
-            {
-                return BadRequest();
-            }
+            return Ok(games);
         }
 
         [HttpGet("{gameId}")]
