@@ -281,15 +281,59 @@ namespace SoccerAppBackend.Data
             }
             catch (SqlException sqlEx)
             {
-                Console.WriteLine($"[SQL EXCEPTION thrown from SoccerAppBackend => CoachesService => UpdateCoachById: {DateTime.Now}] - SQL Exception: {sqlEx.Message}");
+                Console.WriteLine($"[SQL EXCEPTION thrown from SoccerAppBackend => CoachesService => UpdateCoach: {DateTime.Now}] - SQL Exception: {sqlEx.Message}");
                 Console.WriteLine(sqlEx.StackTrace);
                 return coachToUpdate;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[EXCEPTION thrown from SoccerAppBackend => CoachesService => UpdateCoachById: {DateTime.Now}] - Exception: {ex.Message}");
+                Console.WriteLine($"[EXCEPTION thrown from SoccerAppBackend => CoachesService => UpdateCoach: {DateTime.Now}] - Exception: {ex.Message}");
                 Console.WriteLine(ex.StackTrace);
                 return coachToUpdate;
+            }
+        }
+
+
+        public async Task<Coach> UpdateCoachById(int coachId, int userId)
+        {
+            string sqlQuery =
+                @"  UPDATE SoccerAppCoaches
+                    SET UserId = @userid, ModifiedAt = @modifiedAt
+                    WHERE CoachId = @coachId
+                    SELECT CAST(SCOPE_IDENTITY() AS INT)";
+
+            Coach existingCoachRecord = await GetCoachById(coachId);
+
+            try
+            {
+                using SqlConnection connection = databaseSerivce.CreateDbConnection();
+                await connection.OpenAsync();
+                using SqlCommand command = new SqlCommand(sqlQuery, connection);
+
+                command.Parameters.AddWithValue("@modifiedAt", DateTime.Now);
+                command.Parameters.AddWithValue("@coachId", coachId);
+                command.Parameters.AddWithValue("@userId", userId);
+
+                int rowsAffected = await command.ExecuteNonQueryAsync();
+
+                if (rowsAffected > 0)
+                {
+                    existingCoachRecord = await GetCoachById(coachId);
+                }
+
+                return existingCoachRecord;
+            }
+            catch (SqlException sqlEx)
+            {
+                Console.WriteLine($"[SQL EXCEPTION thrown from SoccerAppBackend => CoachesService => UpdateCoachById: {DateTime.Now}] - SQL Exception: {sqlEx.Message}");
+                Console.WriteLine(sqlEx.StackTrace);
+                return existingCoachRecord;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[EXCEPTION thrown from SoccerAppBackend => CoachesService => UpdateCoachById: {DateTime.Now}] - Exception: {ex.Message}");
+                Console.WriteLine(ex.StackTrace);
+                return existingCoachRecord;
             }
         }
 
