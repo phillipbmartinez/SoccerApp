@@ -69,6 +69,21 @@ namespace SoccerAppBackend.Controllers
             return Ok(updatedCoach);
         }
 
+        [HttpPut("{coachId}/{userId}")]
+        public async Task<IActionResult> UpdateCoachById(int coachId, int userId)
+        {
+            Coach coachToUpdate = await coachesService.UpdateCoachById(coachId, userId);
+
+            if (coachToUpdate.CoachId > 0)
+            {
+                return Ok(coachToUpdate);
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateCoach(Coach coachtoCreate)
         {
