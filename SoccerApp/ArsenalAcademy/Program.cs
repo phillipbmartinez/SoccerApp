@@ -18,6 +18,7 @@ namespace ArsenalAcademy
             });
 
             builder.Services.AddScoped<ICoachesApiService, CoachesApiService>();
+            builder.Services.AddScoped<IGameTeamOpponentsApiService, GameTeamOpponentsApiService>();
 
             var app = builder.Build();
 
