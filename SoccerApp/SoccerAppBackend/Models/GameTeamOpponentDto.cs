@@ -4,7 +4,7 @@
     {
         public int GameId { get; set; }
         public DateTime GameDate { get; set; }
-        public string GameLocation { get; set; }
+        public string? GameLocation { get; set; }
         public string? GameStatus { get; set; }
         public string? AgeGroup { get; set; }
         public int TeamId { get; set; }
