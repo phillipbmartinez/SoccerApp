@@ -17,11 +17,20 @@ namespace SoccerAppBackend.Controllers
             this.gamesTeamsOpponentsService = gamesTeamsOpponentsService;
         }
 
+        [HttpGet]
         public async Task<IActionResult> GetAllGames()
         {
             List<GameTeamOpponentDto> games = await gamesTeamsOpponentsService.GetGames();
 
             return Ok(games);
+        }
+
+        [HttpGet("upcoming")]
+        public async Task<IActionResult> GetUpcomingGames()
+        {
+            List<GameTeamOpponentDto> upcomingGames = await gamesTeamsOpponentsService.GetUpcomingGames();
+
+            return Ok(upcomingGames);
         }
 
         [HttpGet("{gameId}")]
