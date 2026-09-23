@@ -27,15 +27,15 @@
                             <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Coaches" asp-action="Index">Our Coaches</a>
+                            <a class="nav-link" asp-area="" asp-controller="coaches" asp-action="index">Our Coaches</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Games</a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" asp-controller="Games" asp-action="Index">Upcoming</a></li>
-                                <li><a class="dropdown-item" asp-controller="Games" asp-action="PreviousGames">Previous</a></li>
+                                <li><a class="dropdown-item" asp-controller="games" asp-action="upcominggames">Upcoming</a></li>
+                                <li><a class="dropdown-item" asp-controller="games" asp-action="previousgames">Previous</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" asp-controller="Games" asp-action="RequestGame">Request</a></li>
+                                <li><a class="dropdown-item" asp-controller="games" asp-action="requestgame">Request</a></li>
                             </ul>
                         </li>
                     </ul>
