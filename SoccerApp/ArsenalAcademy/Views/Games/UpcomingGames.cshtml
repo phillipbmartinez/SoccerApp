@@ -11,9 +11,7 @@
             <th scope="col">Status</th>
             <th scope="col">Age Group</th>
             <th scope="col">Home Team</th>
-            <th scope="col">Home Team Score</th>
             <th scope="col">Away Team</th>
-            <th scope="col">Home Team Score</th>
             <th scope="col"></th>
         </tr>
     </thead>
@@ -26,9 +24,7 @@
                 <td>@game.GameStatus</td>
                 <td>@game.AgeGroup</td>
                 <td>@game.TeamName</td>
-                <td>@game.TeamScore</td>
                 <td>@game.OpponentName</td>
-                <td>@game.OpponentScore</td>
                 <td><a class="btn btn-link" asp-controller="games" asp-action="getgame" asp-route-Id="@game.GameId">View</a></td>
             </tr>
         }
