@@ -33,6 +33,14 @@ namespace SoccerAppBackend.Controllers
             return Ok(upcomingGames);
         }
 
+        [HttpGet("previous")]
+        public async Task<IActionResult> GetPreviousGames()
+        {
+            List<GameTeamOpponentDto> previousGames = await gamesTeamsOpponentsService.GetPreviousGames();
+
+            return Ok(previousGames);
+        }
+
         [HttpGet("{gameId}")]
         public async Task<IActionResult> GetGameById(int gameId)
         {
