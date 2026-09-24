@@ -50,5 +50,25 @@ namespace ArsenalAcademy.Services
 
             return upcomingGames;
         }
+
+        public async Task<List<ViewGameTeamOpponentViewModel>> GetPreviousGames()
+        {
+            HttpClient httpClient = httpClientFactory.CreateClient("SoccerAppApi");
+            List<ViewGameTeamOpponentViewModel> previousGames = new List<ViewGameTeamOpponentViewModel>();
+
+            try
+            {
+                previousGames = await httpClient.GetFromJsonAsync<List<ViewGameTeamOpponentViewModel>>("games/previous");
+
+                return previousGames;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[EXCEPTION thrown from ArsenalAcademy => GameTeamOpponentsApiService => GetPreviousGames: {DateTime.Now}] - Exception: {ex.Message}");
+                Console.WriteLine(ex.StackTrace);
+            }
+
+            return previousGames;
+        }
     }
 }
