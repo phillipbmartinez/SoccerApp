@@ -304,6 +304,7 @@ namespace SoccerAppBackend.Data
                 await connection.OpenAsync();
                 using SqlCommand command = new SqlCommand(sqlQuery, connection);
 
+                command.Parameters.AddWithValue("@playerGameStatId", playerGameStatToUpdate.PlayerGameStatId);
                 command.Parameters.AddWithValue("@gameId", playerGameStatToUpdate.GameId);
                 command.Parameters.AddWithValue("@playerId", playerGameStatToUpdate.PlayerId);
                 command.Parameters.AddWithValue("@modifiedAt", DateTime.Now);
