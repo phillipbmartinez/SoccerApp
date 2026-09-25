@@ -33,5 +33,12 @@ namespace ArsenalAcademy.Controllers
 
             return View(previousGames);
         }
+
+        public async Task<IActionResult> TeamGames(int id)
+        {
+            List<ViewGameTeamOpponentViewModel> teamGames = await gameTeamOpponentsApiService.GetGamesByTeamId(id);
+
+            return View(teamGames);
+        }
     }
 }
