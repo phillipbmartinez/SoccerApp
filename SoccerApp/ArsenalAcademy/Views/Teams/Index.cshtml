@@ -20,7 +20,7 @@
                 <td>@team.TeamName.</td>
                 <td>@team.AgeGroup</td>
                 <td>@team.CoachFirstName @team.CoachLastName</td>
-                <td><a class="btn btn-link" asp-controller="games" asp-action="getteamgames" asp-route-Id="@team.TeamId">Games</a></td>
+                <td><a class="btn btn-link" asp-controller="games" asp-action="teamgames" asp-route-Id="@team.TeamId">Games</a></td>
                 <td><a class="btn btn-link" asp-controller="players" asp-action="getteamplayers" asp-route-Id="@team.TeamId">Players</a></td>
             </tr>
         }
