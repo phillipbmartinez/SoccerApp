@@ -1,0 +1,39 @@
+﻿@model ViewGameTeamOpponentViewModel
+
+@{
+}
+
+<table class="table table-striped table-hover text-center">
+    <thead>
+        <tr>
+            <th scope="col">Date / Time</th>
+            <th scope="col">Location</th>
+            <th scope="col">Status</th>
+            <th scope="col">Age Group</th>
+            <th scope="col">Home Team</th>
+            <th scope="col">Home Team Score</th>
+            <th scope="col">Away Team</th>
+            <th scope="col">Home Team Score</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>@Model.GameDate.ToString("M/dd/yyyy @ h:mm tt")</td>
+            <td>@Model.GameLocation</td>
+            <td>@Model.GameStatus</td>
+            <td>@Model.AgeGroup</td>
+            <td>@Model.TeamName</td>
+            <td>@Model.TeamScore</td>
+            <td>@Model.OpponentName</td>
+            <td>@Model.OpponentScore</td>
+            <td><a class="btn btn-link" asp-controller="players" asp-action="getgameplayerstats" asp-route-Id="@Model.GameId">View</a></td>
+        </tr>
+    </tbody>
+</table>
+<div class="row text-center justify-content-center">
+    <div class="col-4">
+        <a role="button" class="btn btn-primary" asp-controller="home" asp-action="index">Home</a>
+    </div>
+</div>
+
