@@ -263,5 +263,50 @@ namespace SoccerAppBackend.Data
                 return teamToDeactivate;
             }
         }
+
+        public async Task<List<TeamCoachDto>> GetTeamsCoaches()
+        {
+            List<TeamCoachDto> teams = new List<TeamCoachDto>();
+            string sqlQuery = @"SELECT * FROM vw_SoccerAppCoachesTeams";
+
+            try
+            {
+                using SqlConnection connection = databaseService.CreateDbConnection();
+                await connection.OpenAsync();
+                using SqlCommand command = new SqlCommand(sqlQuery, connection);
+                SqlDataReader reader = await command.ExecuteReaderAsync();
+
+                while (await reader.ReadAsync())
+                {
+                    teams.Add(new TeamCoachDto
+                    {
+                        CoachId = reader.GetInt32(reader.GetOrdinal("CoachId")),
+                        TeamId = reader.GetInt32(reader.GetOrdinal("TeamId")),
+                        UserId = reader.GetInt32(reader.GetOrdinal("UserId")),
+                        TeamName = reader.GetString(reader.GetOrdinal("TeamName")),
+                        AgeGroup = reader.IsDBNull(reader.GetOrdinal("AgeGroup"))
+                            ? null
+                            : reader.GetString(reader.GetOrdinal("AgeGroup")),
+                        CoachFirstName = reader.GetString(reader.GetOrdinal("CoachFirstName")),
+                        CoachLastName = reader.GetString(reader.GetOrdinal("CoachLastName")),
+                    });
+                };
+
+                return teams;
+
+            }
+            catch (SqlException sqlEx)
+            {
+                Console.WriteLine($"[SQL EXCEPTION thrown from SoccerAppBackend => TeamsService => GetTeamsCoaches: {DateTime.Now}] - SQL Exception: {sqlEx.Message}");
+                Console.WriteLine(sqlEx.StackTrace);
+                return teams;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[EXCEPTION thrown from SoccerAppBackend => TeamsService => GetTeamsCoaches: {DateTime.Now}] - Exception: {ex.Message}");
+                Console.WriteLine(ex.StackTrace);
+                return teams;
+            }
+        }
     }
 }
