@@ -56,6 +56,14 @@ namespace SoccerAppBackend.Controllers
             }
         }
 
+        [HttpGet("team/{teamId}")]
+        public async Task<IActionResult> GetTeamGamesByTeamId(int teamId)
+        {
+            List<GameTeamOpponentDto> teamGames = await gamesTeamsOpponentsService.GetGamesByTeamId(teamId);
+
+            return Ok(teamGames);
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateGame(GameDto gameToCreate)
         {
