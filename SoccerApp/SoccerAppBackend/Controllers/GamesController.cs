@@ -44,7 +44,7 @@ namespace SoccerAppBackend.Controllers
         [HttpGet("{gameId}")]
         public async Task<IActionResult> GetGameById(int gameId)
         {
-            GameDto game = await gamesService.GetGameById(gameId);
+            GameTeamOpponentDto game = await gamesTeamsOpponentsService.GetGameByGameId(gameId);
 
             if (game.GameId != 0)
             {
