@@ -40,5 +40,12 @@ namespace ArsenalAcademy.Controllers
 
             return View(teamGames);
         }
+
+        public async Task<IActionResult> GetGame(int id)
+        {
+            ViewGameTeamOpponentViewModel game = await gameTeamOpponentsApiService.GetGameById(id);
+
+            return View("Game", game);
+        }
     }
 }
