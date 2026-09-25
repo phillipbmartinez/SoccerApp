@@ -72,8 +72,6 @@ namespace SoccerAppBackend.Data
             List<GameTeamOpponentDto> upcomingGames = new List<GameTeamOpponentDto>();
             string today = DateTime.Now.ToString("yyyy/MM/dd");
 
-            Console.WriteLine(today);
-
             string sqlQuery = "SELECT * FROM [vw_SoccerAppGamesTeamsOpponents] WHERE GameDate > @today";
 
             try
@@ -108,8 +106,7 @@ namespace SoccerAppBackend.Data
                         ? null
                         : reader.GetInt32(reader.GetOrdinal("OpponentScore")),
                     });
-                }
-                ;
+                };
 
                 return upcomingGames;
             }
@@ -131,8 +128,6 @@ namespace SoccerAppBackend.Data
         {
             List<GameTeamOpponentDto> upcomingGames = new List<GameTeamOpponentDto>();
             string today = DateTime.Now.ToString("yyyy/MM/dd");
-
-            Console.WriteLine(today);
 
             string sqlQuery = "SELECT * FROM [vw_SoccerAppGamesTeamsOpponents] WHERE GameDate < @today";
 
@@ -168,8 +163,7 @@ namespace SoccerAppBackend.Data
                         ? null
                         : reader.GetInt32(reader.GetOrdinal("OpponentScore")),
                     });
-                }
-                ;
+                };
 
                 return upcomingGames;
             }
@@ -293,6 +287,126 @@ namespace SoccerAppBackend.Data
                 Console.WriteLine($"[EXCEPTION thrown from SoccerAppBackend => GamesTeamsOpponentsService => GetGameByGameId: {DateTime.Now}] - Exception: {ex.Message}");
                 Console.WriteLine(ex.StackTrace);
                 return game;
+            }
+        }
+
+        public async Task<List<GameTeamOpponentDto>> GetTeamsUpcomingGames(int teamId)
+        {
+            List<GameTeamOpponentDto> upcomingGames = new List<GameTeamOpponentDto>();
+            string today = DateTime.Now.ToString("yyyy/MM/dd");
+
+            string sqlQuery = "SELECT * FROM [vw_SoccerAppGamesTeamsOpponents] WHERE TeamId = @teamId AND GameDate > @today";
+
+            try
+            {
+                using SqlConnection connection = databaseService.CreateDbConnection();
+                await connection.OpenAsync();
+                using SqlCommand command = new SqlCommand(sqlQuery, connection);
+
+                command.Parameters.AddWithValue("@teamId", teamId);
+                command.Parameters.AddWithValue("@today", today);
+
+                SqlDataReader reader = await command.ExecuteReaderAsync();
+
+                while (await reader.ReadAsync())
+                {
+                    upcomingGames.Add(new GameTeamOpponentDto
+                    {
+                        GameId = reader.GetInt32(reader.GetOrdinal("GameId")),
+                        GameDate = reader.GetDateTime(reader.GetOrdinal("GameDate")),
+                        GameLocation = reader.IsDBNull(reader.GetOrdinal("GameLocation"))
+                        ? null
+                        : reader.GetString(reader.GetOrdinal("GameLocation")),
+                        GameStatus = reader.GetString(reader.GetOrdinal("GameStatus")),
+                        AgeGroup = reader.IsDBNull(reader.GetOrdinal("AgeGroup"))
+                        ? null
+                        : reader.GetString(reader.GetOrdinal("AgeGroup")),
+                        TeamId = reader.GetInt32(reader.GetOrdinal("TeamId")),
+                        TeamName = reader.GetString(reader.GetOrdinal("TeamName")),
+                        TeamScore = reader.IsDBNull(reader.GetOrdinal("TeamScore"))
+                        ? null
+                        : reader.GetInt32(reader.GetOrdinal("TeamScore")),
+                        OpponentId = reader.GetInt32(reader.GetOrdinal("OpponentId")),
+                        OpponentName = reader.GetString(reader.GetOrdinal("OpponentName")),
+                        OpponentScore = reader.IsDBNull(reader.GetOrdinal("OpponentScore"))
+                        ? null
+                        : reader.GetInt32(reader.GetOrdinal("OpponentScore")),
+                    });
+                };
+
+                return upcomingGames;
+            }
+            catch (SqlException sqlEx)
+            {
+                Console.WriteLine($"[SQL EXCEPTION thrown from SoccerAppBackend => GamesTeamsOpponentsService => GetTeamsUpcomingGames: {DateTime.Now}] - SQL Exception: {sqlEx.Message}");
+                Console.WriteLine(sqlEx.StackTrace);
+                return upcomingGames;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[EXCEPTION thrown from SoccerAppBackend => GamesTeamsOpponentsService => GetTeamsUpcomingGames: {DateTime.Now}] - Exception: {ex.Message}");
+                Console.WriteLine(ex.StackTrace);
+                return upcomingGames;
+            }
+        }
+
+        public async Task<List<GameTeamOpponentDto>> GetTeamsPreviousGames(int teamId)
+        {
+            List<GameTeamOpponentDto> upcomingGames = new List<GameTeamOpponentDto>();
+            string today = DateTime.Now.ToString("yyyy/MM/dd");
+
+            string sqlQuery = "SELECT * FROM [vw_SoccerAppGamesTeamsOpponents] WHERE TeamId = @teamId AND GameDate < @today";
+
+            try
+            {
+                using SqlConnection connection = databaseService.CreateDbConnection();
+                await connection.OpenAsync();
+                using SqlCommand command = new SqlCommand(sqlQuery, connection);
+
+                command.Parameters.AddWithValue("@teamId", teamId);
+                command.Parameters.AddWithValue("@today", today);
+
+                SqlDataReader reader = await command.ExecuteReaderAsync();
+
+                while (await reader.ReadAsync())
+                {
+                    upcomingGames.Add(new GameTeamOpponentDto
+                    {
+                        GameId = reader.GetInt32(reader.GetOrdinal("GameId")),
+                        GameDate = reader.GetDateTime(reader.GetOrdinal("GameDate")),
+                        GameLocation = reader.IsDBNull(reader.GetOrdinal("GameLocation"))
+                        ? null
+                        : reader.GetString(reader.GetOrdinal("GameLocation")),
+                        GameStatus = reader.GetString(reader.GetOrdinal("GameStatus")),
+                        AgeGroup = reader.IsDBNull(reader.GetOrdinal("AgeGroup"))
+                        ? null
+                        : reader.GetString(reader.GetOrdinal("AgeGroup")),
+                        TeamId = reader.GetInt32(reader.GetOrdinal("TeamId")),
+                        TeamName = reader.GetString(reader.GetOrdinal("TeamName")),
+                        TeamScore = reader.IsDBNull(reader.GetOrdinal("TeamScore"))
+                        ? null
+                        : reader.GetInt32(reader.GetOrdinal("TeamScore")),
+                        OpponentId = reader.GetInt32(reader.GetOrdinal("OpponentId")),
+                        OpponentName = reader.GetString(reader.GetOrdinal("OpponentName")),
+                        OpponentScore = reader.IsDBNull(reader.GetOrdinal("OpponentScore"))
+                        ? null
+                        : reader.GetInt32(reader.GetOrdinal("OpponentScore")),
+                    });
+                };
+
+                return upcomingGames;
+            }
+            catch (SqlException sqlEx)
+            {
+                Console.WriteLine($"[SQL EXCEPTION thrown from SoccerAppBackend => GamesTeamsOpponentsService => GetTeamsPreviousGames: {DateTime.Now}] - SQL Exception: {sqlEx.Message}");
+                Console.WriteLine(sqlEx.StackTrace);
+                return upcomingGames;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[EXCEPTION thrown from SoccerAppBackend => GamesTeamsOpponentsService => GetTeamsPreviousGames: {DateTime.Now}] - Exception: {ex.Message}");
+                Console.WriteLine(ex.StackTrace);
+                return upcomingGames;
             }
         }
     }
