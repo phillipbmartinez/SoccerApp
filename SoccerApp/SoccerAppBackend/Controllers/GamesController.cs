@@ -64,6 +64,22 @@ namespace SoccerAppBackend.Controllers
             return Ok(teamGames);
         }
 
+        [HttpGet("team/{teamId}/previous")]
+        public async Task<IActionResult> GetTeamsPreviousGames(int teamId)
+        {
+            List<GameTeamOpponentDto> teamGames = await gamesTeamsOpponentsService.GetTeamsPreviousGames(teamId);
+
+            return Ok(teamGames);
+        }
+
+        [HttpGet("team/{teamId}/upcoming")]
+        public async Task<IActionResult> GetTeamsUpcomingGames(int teamId)
+        {
+            List<GameTeamOpponentDto> teamGames = await gamesTeamsOpponentsService.GetTeamsUpcomingGames(teamId);
+
+            return Ok(teamGames);
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateGame(GameDto gameToCreate)
         {
