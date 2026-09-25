@@ -19,7 +19,7 @@
         @foreach (ViewGameTeamOpponentViewModel game in Model)
         {
             <tr>
-                <td>@game.GameDate.</td>
+                <td>@game.GameDate.ToString("M/dd/yyyy @ h:mm tt")</td>
                 <td>@game.GameLocation</td>
                 <td>@game.GameStatus</td>
                 <td>@game.AgeGroup</td>
