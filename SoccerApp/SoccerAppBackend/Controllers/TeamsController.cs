@@ -15,7 +15,15 @@ namespace SoccerAppBackend.Controllers
             this.teamsService = teamsService;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetTeams()
+        {
+            List<TeamCoachDto> teams = await teamsService.GetTeamsCoaches();
 
+            return Ok(teams);
+        }
+
+        [HttpGet("active")]
         public async Task<IActionResult> GetActiveTeams()
         {
             List<TeamDto> activeTeams = await teamsService.GetActiveTeams();
