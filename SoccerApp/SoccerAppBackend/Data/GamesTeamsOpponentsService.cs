@@ -186,5 +186,61 @@ namespace SoccerAppBackend.Data
                 return upcomingGames;
             }
         }
+
+        public async Task<List<GameTeamOpponentDto>> GetGamesByTeamId(int teamId)
+        {
+            List<GameTeamOpponentDto> games = new List<GameTeamOpponentDto>();
+
+            string sqlQuery = "SELECT * FROM [vw_SoccerAppGamesTeamsOpponents] WHERE TeamId = @teamId";
+
+            try
+            {
+                using SqlConnection connection = databaseService.CreateDbConnection();
+                await connection.OpenAsync();
+                using SqlCommand command = new SqlCommand(sqlQuery, connection);
+                command.Parameters.AddWithValue("@teamId", teamId);
+                SqlDataReader reader = await command.ExecuteReaderAsync();
+
+                while (await reader.ReadAsync())
+                {
+                    games.Add(new GameTeamOpponentDto
+                    {
+                        GameId = reader.GetInt32(reader.GetOrdinal("GameId")),
+                        GameDate = reader.GetDateTime(reader.GetOrdinal("GameDate")),
+                        GameLocation = reader.IsDBNull(reader.GetOrdinal("GameLocation"))
+                        ? null
+                        : reader.GetString(reader.GetOrdinal("GameLocation")),
+                        GameStatus = reader.GetString(reader.GetOrdinal("GameStatus")),
+                        AgeGroup = reader.IsDBNull(reader.GetOrdinal("AgeGroup"))
+                        ? null
+                        : reader.GetString(reader.GetOrdinal("AgeGroup")),
+                        TeamId = reader.GetInt32(reader.GetOrdinal("TeamId")),
+                        TeamName = reader.GetString(reader.GetOrdinal("TeamName")),
+                        TeamScore = reader.IsDBNull(reader.GetOrdinal("TeamScore"))
+                        ? null
+                        : reader.GetInt32(reader.GetOrdinal("TeamScore")),
+                        OpponentId = reader.GetInt32(reader.GetOrdinal("OpponentId")),
+                        OpponentName = reader.GetString(reader.GetOrdinal("OpponentName")),
+                        OpponentScore = reader.IsDBNull(reader.GetOrdinal("OpponentScore"))
+                        ? null
+                        : reader.GetInt32(reader.GetOrdinal("OpponentScore")),
+                    });
+                };
+
+                return games;
+            }
+            catch (SqlException sqlEx)
+            {
+                Console.WriteLine($"[SQL EXCEPTION thrown from SoccerAppBackend => GamesTeamsOpponentsService => GetGamesForTeamById: {DateTime.Now}] - SQL Exception: {sqlEx.Message}");
+                Console.WriteLine(sqlEx.StackTrace);
+                return games;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[EXCEPTION thrown from SoccerAppBackend => GamesTeamsOpponentsService => GetGamesForTeamById: {DateTime.Now}] - Exception: {ex.Message}");
+                Console.WriteLine(ex.StackTrace);
+                return games;
+            }
+        }
     }
 }

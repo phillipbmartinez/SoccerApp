@@ -5,6 +5,7 @@ namespace SoccerAppBackend.Data
     public interface IGamesTeamsOpponentsService
     {
         Task<List<GameTeamOpponentDto>> GetGames();
+        Task<List<GameTeamOpponentDto>> GetGamesByTeamId(int teamId);
         Task<List<GameTeamOpponentDto>> GetPreviousGames();
         Task<List<GameTeamOpponentDto>> GetUpcomingGames();
     }
