@@ -348,5 +348,55 @@ namespace SoccerAppBackend.Data
                 return playerToDeactivate;
             }
         }
+
+        public async Task<List<PlayerTeamDto>> GetActivePlayersTeams(int teamId)
+        {
+            List<PlayerTeamDto> activePlayersTeams = new List<PlayerTeamDto>();
+            string sqlQuery = @"SELECT * FROM vw_SoccerAppPlayersTeams WHERE PlayerIsActive = 1 AND TeamIsActive = 1 AND TeamId = @teamId";
+
+            try
+            {
+                using SqlConnection connection = databaseService.CreateDbConnection();
+                await connection.OpenAsync();
+                using SqlCommand command = new SqlCommand(sqlQuery, connection);
+                command.Parameters.AddWithValue("@teamId", teamId);
+                SqlDataReader reader = await command.ExecuteReaderAsync();
+
+                while (await reader.ReadAsync())
+                {
+                    activePlayersTeams.Add(new PlayerTeamDto
+                    {
+                        PlayerId = reader.GetInt32(reader.GetOrdinal("PlayerId")),
+                        PlayerFirstName = reader.GetString(reader.GetOrdinal("PlayerFirstName")),
+                        PlayerLastName = reader.GetString(reader.GetOrdinal("PlayerLastName")),
+                        JerseyNumber = reader.IsDBNull(reader.GetOrdinal("JerseyNumber"))
+                            ? (int?)null
+                            : reader.GetInt32(reader.GetOrdinal("JerseyNumber")),
+                        PlayerIsActive = reader.GetBoolean(reader.GetOrdinal("PlayerIsActive")),
+                        TeamId = reader.GetInt32(reader.GetOrdinal("TeamId")),
+                        TeamName = reader.GetString(reader.GetOrdinal("TeamName")),
+                        AgeGroup = reader.IsDBNull(reader.GetOrdinal("AgeGroup"))
+                            ? null
+                            : reader.GetString(reader.GetOrdinal("AgeGroup")),
+                        TeamIsActive = reader.GetBoolean(reader.GetOrdinal("TeamIsActive"))
+                    });
+                };
+
+                return activePlayersTeams;
+
+            }
+            catch (SqlException sqlEx)
+            {
+                Console.WriteLine($"[SQL EXCEPTION thrown from SoccerAppBackend => PlayersService => GetActivePlayersTeams: {DateTime.Now}] - SQL Exception: {sqlEx.Message}");
+                Console.WriteLine(sqlEx.StackTrace);
+                return activePlayersTeams;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[EXCEPTION thrown from SoccerAppBackend => PlayersService => GetActivePlayersTeams: {DateTime.Now}] - Exception: {ex.Message}");
+                Console.WriteLine(ex.StackTrace);
+                return activePlayersTeams;
+            }
+        }
     }
 }

@@ -10,5 +10,6 @@ namespace SoccerAppBackend.Data
         Task<PlayerDto> GetAnyPlayerById(int playerId);
         Task<PlayerDto> GetActivePlayerById(int playerId);
         Task<PlayerDto> UpdatePlayer(PlayerDto playerToUpdate);
+        Task<List<PlayerTeamDto>> GetActivePlayersTeams(int teamId);
     }
 }
