@@ -110,5 +110,45 @@ namespace ArsenalAcademy.Services
 
             return teamGames;
         }
+
+        public async Task<List<ViewGameTeamOpponentViewModel>> GetTeamsPreviousGames(int teamId)
+        {
+            HttpClient httpClient = httpClientFactory.CreateClient("SoccerAppApi");
+            List<ViewGameTeamOpponentViewModel> teamsPreviousGames = new List<ViewGameTeamOpponentViewModel>();
+
+            try
+            {
+                teamsPreviousGames = await httpClient.GetFromJsonAsync<List<ViewGameTeamOpponentViewModel>>($"games/team/{teamId}/previous");
+
+                return teamsPreviousGames;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[EXCEPTION thrown from ArsenalAcademy => GameTeamOpponentsApiService => GetTeamsPreviousGames: {DateTime.Now}] - Exception: {ex.Message}");
+                Console.WriteLine(ex.StackTrace);
+            }
+
+            return teamsPreviousGames;
+        }
+
+        public async Task<List<ViewGameTeamOpponentViewModel>> GetTeamsUpcomingGames(int teamId)
+        {
+            HttpClient httpClient = httpClientFactory.CreateClient("SoccerAppApi");
+            List<ViewGameTeamOpponentViewModel> teamsUpcomingGames = new List<ViewGameTeamOpponentViewModel>();
+
+            try
+            {
+                teamsUpcomingGames = await httpClient.GetFromJsonAsync<List<ViewGameTeamOpponentViewModel>>($"games/team/{teamId}/upcoming");
+
+                return teamsUpcomingGames;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[EXCEPTION thrown from ArsenalAcademy => GameTeamOpponentsApiService => GetTeamsUpcomingGames: {DateTime.Now}] - Exception: {ex.Message}");
+                Console.WriteLine(ex.StackTrace);
+            }
+
+            return teamsUpcomingGames;
+        }
     }
 }

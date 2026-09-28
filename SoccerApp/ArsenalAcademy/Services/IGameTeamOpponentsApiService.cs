@@ -8,6 +8,8 @@ namespace ArsenalAcademy.Services
         Task<List<ViewGameTeamOpponentViewModel>> GetGames();
         Task<List<ViewGameTeamOpponentViewModel>> GetGamesByTeamId(int teamId);
         Task<List<ViewGameTeamOpponentViewModel>> GetPreviousGames();
+        Task<List<ViewGameTeamOpponentViewModel>> GetTeamsPreviousGames(int teamId);
+        Task<List<ViewGameTeamOpponentViewModel>> GetTeamsUpcomingGames(int teamId);
         Task<List<ViewGameTeamOpponentViewModel>> GetUpcomingGames();
     }
 }
