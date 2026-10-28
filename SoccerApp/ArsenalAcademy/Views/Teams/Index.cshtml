@@ -17,7 +17,7 @@
         @foreach (ViewTeamCoachViewModel team in Model)
         {
             <tr>
-                <td>@team.TeamName.</td>
+                <td>@team.TeamName</td>
                 <td>@team.AgeGroup</td>
                 <td>@team.CoachFirstName @team.CoachLastName</td>
                 <td><a class="btn btn-link" asp-controller="games" asp-action="teamgames" asp-route-Id="@team.TeamId">Games</a></td>
